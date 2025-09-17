@@ -6,7 +6,7 @@ import styles from "./TodoMain.module.scss"
 
 
 export default function TodoMain() {
-  const {todos, setTodos} = useTodos()
+  const {todos} = useTodos()
 
   return (
     <main className={styles.main}>

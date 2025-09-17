@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { useTodos } from "../TodoContextProvider/TodoContextProvider"
+import styles from "./TodoForm.module.scss"
 
 export default function TodoForm() {
   const {todos, setTodos} = useTodos()
@@ -15,14 +16,14 @@ export default function TodoForm() {
   }
 
   return (
-    <form id="todoForm" className="todo-form" onSubmit={handleFormSubmit}>
+    <form id="todoForm" className={styles.todo_form} onSubmit={handleFormSubmit}>
 
-            <label id="toggleAllLabel" className="toggle-all-wrapper">
-                <input type="checkbox" id="toggleAll" className="toggle-all"/>
-                <span className="toggle-all-checkmark"></span>
+            <label id="toggleAllLabel" className={styles.toggle_all_wrapper}>
+                <input type="checkbox" id="toggleAll" className={styles.toggle_all}/>
+                <span className={styles.toggle_all_checkmark}></span>
             </label>  
 
-            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} id="inputTodo" className="input-todo" type="text" placeholder="What needs to be done?"/>
+            <input value={inputValue} onChange={(e) => setInputValue(e.target.value)} id="inputTodo" className={styles.input_todo} type="text" placeholder="What needs to be done?"/>
     </form>
   )
 }

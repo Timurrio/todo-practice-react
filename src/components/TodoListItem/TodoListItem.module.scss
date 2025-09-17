@@ -1,0 +1,99 @@
+@use "../../styles/variables";
+
+.todo_item {
+    min-height: 60px;
+    font-size: 24px;
+
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    max-width: 100%;
+
+    &:focus {
+       box-shadow: 0 0 5px 2px  variables.$main-red-color-transparent; 
+    }
+
+    &:hover .todo_delete {
+        color: #aaa
+    }
+
+    &:hover .todo_delete:hover {
+        color: variables.$main-red-color;
+    }
+}
+
+.todo_text {
+    flex: 1;
+    width: auto;
+    padding: 10px 0px;
+    word-break: break-all;
+    white-space: normal;   
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
+}
+
+.todo_delete {
+    background: none;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    color: transparent;
+    font-size: 18px;
+    transition: all 0.2s;
+
+
+    &:active {
+        box-shadow: 0 0 5px 2px  variables.$main-red-color-transparent; 
+    }
+}
+
+.completed .todo_text {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.todo_checkbox_wrapper {
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.todo_checkbox {
+  position: absolute;
+  opacity: 0;
+}
+
+.todo_checkmark {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 1px solid gray;
+  transition: all 0.2s;
+
+  &::after {
+    position: relative;
+    display: block;
+    content: "✓";
+    font-size: 18px;
+    color: green;
+    opacity: 0;
+    margin-left: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.todo_checkbox:checked ~ .todo_checkmark {
+  border: 1px solid green
+}
+
+.todo_checkbox:checked ~ .todo_checkmark::after {
+  opacity: 1;
+}
