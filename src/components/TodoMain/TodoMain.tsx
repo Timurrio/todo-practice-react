@@ -5,13 +5,13 @@ import TodoListFooter from '../TodoListFooter/TodoListFooter';
 import styles from './TodoMain.module.scss';
 
 export default function TodoMain() {
-  const { todos } = useTodos();
+  const { filteredTodos } = useTodos();
 
   return (
     <main className={styles.main}>
       <TodoForm />
 
-      <TodoList todos={todos} />
+      <TodoList todos={filteredTodos} />
 
       <TodoListFooter />
     </main>
