@@ -32,6 +32,19 @@
     overflow-wrap: break-word;
 }
 
+.todo_edit {
+  position: relative;
+  z-index: 3;
+  padding-left: 50px;
+  height: 60px;
+  width: 100%;
+  box-shadow: 0 0 5px 2px  variables.$main-red-color-transparent; 
+  font-size: 24px;
+  outline: none;
+  border: none;
+  background:none;
+}
+
 .todo_delete {
     background: none;
     padding: 10px;

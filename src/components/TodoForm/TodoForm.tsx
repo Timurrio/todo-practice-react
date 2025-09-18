@@ -1,12 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import styles from './TodoForm.module.scss';
-import type { Todo } from '../../types/todo';
 
 export default function TodoForm() {
   const { todos, filter, filteredTodos, setTodos } = useTodos();
   const [inputValue, setInputValue] = useState<string>('');
-  // const [isChecked, setIsChecked] = useState<boolean>(false);
 
   const isChecked = useMemo(() => {
     switch (filter) {
