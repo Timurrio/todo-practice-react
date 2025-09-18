@@ -1,20 +1,19 @@
-import { useTodos } from "../TodoContextProvider/TodoContextProvider"
-import TodoForm from "../TodoForm/TodoForm"
-import { TodoList } from "../TodoList/TodoList"
-import TodoListFooter from "../TodoListFooter/TodoListFooter"
-import styles from "./TodoMain.module.scss"
-
+import { useTodos } from '../TodoContextProvider/TodoContextProvider';
+import TodoForm from '../TodoForm/TodoForm';
+import { TodoList } from '../TodoList/TodoList';
+import TodoListFooter from '../TodoListFooter/TodoListFooter';
+import styles from './TodoMain.module.scss';
 
 export default function TodoMain() {
-  const {todos} = useTodos()
+  const { todos } = useTodos();
 
   return (
     <main className={styles.main}>
-        <TodoForm/>
+      <TodoForm />
 
-        <TodoList todos={todos}/>
+      <TodoList todos={todos} />
 
-        <TodoListFooter/>
+      <TodoListFooter />
     </main>
-  )
+  );
 }

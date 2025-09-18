@@ -1,13 +1,13 @@
-import './App.scss'
-import TodoPage from './pages/TodoPage/TodoPage'
+import './App.scss';
+import TodoPage from './pages/TodoPage/TodoPage';
 
 function App() {
-
   return (
     <>
-      <TodoPage/>
+      <TodoPage />
+      
     </>
-  )
+  );
 }
 
-export default App
+export default App;
