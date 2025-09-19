@@ -1,9 +1,27 @@
-import styles from './TodoHeader.module.scss';
+import { Box, Typography } from '@mui/material';
 
-export default function TodoHeader() {
+const TodoHeader: React.FC = () => {
   return (
-    <header className={styles.header}>
-      <h1>todos</h1>
-    </header>
+    <Box
+      component="header"
+      sx={{
+        width: '100%',
+        textAlign: 'center',
+        padding: '30px 0',
+      }}
+    >
+      <Typography
+        component="h1"
+        sx={{
+          color: '#b83f45',
+          fontSize: '80px',
+          fontWeight: 200,
+        }}
+      >
+        todos
+      </Typography>
+    </Box>
   );
-}
+};
+
+export default TodoHeader;

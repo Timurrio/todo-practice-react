@@ -145,7 +145,7 @@ const TodoForm: React.FC = () => {
               >
                 <ToggleAllButton
                   handleFunction={handleToggleAll}
-                  isChecked={isChecked}
+                  isChecked={isChecked !== undefined ? isChecked : false}
                 />
               </InputAdornment>
             ),

@@ -1,7 +1,7 @@
-export const Filters = {
-  All: 'all',
-  Active: 'active',
-  Completed: 'completed',
-} as const;
+enum Filters {
+  All = 'all',
+  Active = 'active',
+  Completed = 'completed',
+}
 
-export type Filters = (typeof Filters)[keyof typeof Filters];
+export default Filters;

@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import styles from './TodoListFooter.module.scss';
+import Filters from '../../types/filters';
 
 export default function TodoListFooter() {
   const { todos, setTodos, filter, setFilter } = useTodos();
@@ -22,27 +23,27 @@ export default function TodoListFooter() {
         <div className={styles.filters}>
           <button
             data-filter="all"
-            onClick={() => setFilter('all')}
+            onClick={() => setFilter(Filters.All)}
             className={`${styles.filter_button}  ${
-              filter === 'all' && styles.active
+              filter === Filters.All && styles.active
             }`}
           >
             All
           </button>
           <button
             data-filter="active"
-            onClick={() => setFilter('active')}
+            onClick={() => setFilter(Filters.Active)}
             className={`${styles.filter_button}  ${
-              filter === 'active' && styles.active
+              filter === Filters.Active && styles.active
             }`}
           >
             Active
           </button>
           <button
             data-filter="completed"
-            onClick={() => setFilter('completed')}
+            onClick={() => setFilter(Filters.Completed)}
             className={`${styles.filter_button}  ${
-              filter === 'completed' && styles.active
+              filter === Filters.Completed && styles.active
             }`}
           >
             Completed

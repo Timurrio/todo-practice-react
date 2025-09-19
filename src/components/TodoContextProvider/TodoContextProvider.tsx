@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import type { Todo } from '../../types/todo';
-import type { Filters } from '../../types/filters';
+import Filters from '../../types/filters';
 import filterTodos from '../../functions/filterTodos';
 
 interface TodoContextType {
@@ -27,7 +27,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [filter, setFilter] = useState<Filters>('all');
+  const [filter, setFilter] = useState<Filters>(Filters.All);
 
   const filteredTodos: Todo[] = useMemo(
     () => filterTodos(todos, filter),
