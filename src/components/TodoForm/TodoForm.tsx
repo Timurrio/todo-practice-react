@@ -13,10 +13,9 @@ const ToggleAllButton: React.FC<{
       onClick={handleFunction}
       disableRipple
       sx={{
-        height: '100%',
         width: '40px',
         padding: '0',
-        fontSize: '1.5rem',
+        fontSize: '32px',
         color: isChecked ? 'text.primary' : 'text.disabled',
         transform: 'rotate(90deg)',
         transition: 'transform 0.2s',
@@ -116,12 +115,12 @@ const TodoForm: React.FC = () => {
         alignItems: 'center',
         gap: 2,
         width: '50%',
+        padding: 0,
       }}
     >
       <TextField
         id="inputTodo"
-        variant="filled"
-        size="small"
+        variant="standard"
         placeholder="What needs to be done?"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
@@ -138,13 +137,22 @@ const TodoForm: React.FC = () => {
           '&:hover': {
             background: 'none',
           },
+          zIndex: 1,
+          '& .MuiInputBase-input': {
+            fontSize: '24px',
+          },
         }}
         slotProps={{
           input: {
             startAdornment: isToggleAllVisible && (
               <InputAdornment
                 position="start"
-                sx={{ height: '100%', alignItems: 'stretch', p: 0, m: 0 }}
+                sx={{
+                  height: '100%',
+                  alignItems: 'stretch',
+                  p: 0,
+                  m: 0,
+                }}
               >
                 <ToggleAllButton
                   handleFunction={handleToggleAll}

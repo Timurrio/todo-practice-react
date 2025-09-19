@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import type { Todo } from '../../types/todo';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
-import styles from './TodoListItem.module.scss';
+import {
+  Checkbox,
+  IconButton,
+  ListItem,
+  TextField,
+  Typography,
+} from '@mui/material';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 interface TodoListItemProps {
   todo: Todo;
 }
 
-export default function TodoListItem({ todo }: TodoListItemProps) {
+const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
   const { setTodos } = useTodos();
   const [isInEditMode, setIsInEditMode] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>(todo.text);
@@ -47,39 +55,103 @@ export default function TodoListItem({ todo }: TodoListItemProps) {
   }
 
   return (
-    <li
+    <ListItem
+      divider
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 1,
+        textDecoration: todo.completed ? 'line-through' : 'none',
+        padding: '10px 0px',
+        minHeight: '70px',
+        '& .delete-btn': {
+          opacity: 0,
+          transition: 'opacity 0.2s',
+        },
+        '&:hover .delete-btn': {
+          opacity: 1,
+        },
+      }}
       onDoubleClick={() => setIsInEditMode(true)}
-      className={`${styles.todo_item} ${todo.completed && styles.completed}`}
     >
       {isInEditMode ? (
-        <input
-          type="text"
+        <TextField
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
-          className={styles.todo_edit}
-          autoFocus
           onBlur={handleInputBlur}
-          onKeyDown={handleChangeText}
+          onKeyDown={(e) => handleChangeText(e)}
+          size="small"
+          autoFocus
+          variant="standard"
+          fullWidth
+          slotProps={{
+            input: {
+              disableUnderline: true,
+            },
+          }}
+          sx={{
+            height: '100%',
+            boxShadow: '0 0 2px 2px rgba(184, 63, 69, 0.85)',
+            padding: '20px 0px 20px 55px',
+            zIndex: 2,
+            '& .MuiInputBase-input': {
+              fontSize: '20px',
+            },
+          }}
         />
       ) : (
         <>
-          <label className={styles.todo_checkbox_wrapper}>
-            <input
-              type="checkbox"
-              className={styles.todo_checkbox}
-              checked={todo.completed}
-              onChange={handleToggle}
-            />
-            <span className={styles.todo_checkmark}></span>
-          </label>
+          <Checkbox
+            checked={todo.completed}
+            onChange={handleToggle}
+            icon={
+              <RadioButtonUncheckedIcon
+                sx={{ fontSize: 28, color: 'grey.500' }}
+              />
+            }
+            checkedIcon={
+              <CheckCircleOutlineIcon sx={{ fontSize: 28, color: 'green' }} />
+            }
+            disableRipple
+          />
 
-          <span className={styles.todo_text}>{todo.text}</span>
+          <Typography
+            variant="body1"
+            sx={{
+              flex: 1,
+              color: todo.completed ? 'text.secondary' : 'text.primary',
+              fontSize: '20px',
+              wordBreak: 'break-all',
+              whiteSpace: 'normal',
+              wordWrap: 'break-word',
+              overflowWrap: 'break-word',
+            }}
+          >
+            {todo.text}
+          </Typography>
 
-          <button onClick={handleDelete} className={styles.todo_delete}>
+          <IconButton
+            onClick={handleDelete}
+            color="default"
+            aria-label="delete"
+            className="delete-btn"
+            disableRipple
+            sx={{
+              color: 'gray',
+              padding: '0 20px',
+              transition: 'color 0.2s',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                color: '#b83f45',
+              },
+            }}
+          >
             X
-          </button>
+          </IconButton>
         </>
       )}
-    </li>
+    </ListItem>
   );
-}
+};
+
+export default TodoListItem;

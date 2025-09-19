@@ -5,7 +5,7 @@ import TodoList from '../TodoList/TodoList';
 import TodoListFooter from '../TodoListFooter/TodoListFooter';
 import styles from './TodoMain.module.scss';
 
-export default function TodoMain() {
+const TodoMain: React.FC = () => {
   const { filteredTodos } = useTodos();
 
   return (
@@ -17,4 +17,6 @@ export default function TodoMain() {
       <TodoListFooter />
     </Box>
   );
-}
+};
+
+export default TodoMain;

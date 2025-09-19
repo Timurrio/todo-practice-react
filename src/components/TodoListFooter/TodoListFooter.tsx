@@ -33,7 +33,7 @@ const TodoListFooter: React.FC = () => {
               sx={{
                 textTransform: 'capitalize',
                 color: 'black',
-                transition: 'none',
+                transition: '0.2s',
                 boxShadow:
                   filter === value
                     ? '0 0 5px 2px rgba(184, 63, 69, 0.85)'
