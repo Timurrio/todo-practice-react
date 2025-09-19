@@ -6,7 +6,7 @@ interface TodoListProps {
   todos: Todo[];
 }
 
-export const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+const TodoList: React.FC<TodoListProps> = ({ todos }) => {
   return (
     <ul className={styles.todo_list}>
       {todos.map((todo) => (
@@ -15,3 +15,5 @@ export const TodoList: React.FC<TodoListProps> = ({ todos }) => {
     </ul>
   );
 };
+
+export default TodoList;

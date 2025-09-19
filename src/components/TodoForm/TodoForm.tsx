@@ -135,6 +135,9 @@ const TodoForm: React.FC = () => {
             backgroundColor: 'white',
             height: '70px',
           },
+          '&:hover': {
+            background: 'none',
+          },
         }}
         slotProps={{
           input: {

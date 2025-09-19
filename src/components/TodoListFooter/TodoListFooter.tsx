@@ -2,8 +2,9 @@ import { useMemo } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import styles from './TodoListFooter.module.scss';
 import Filters from '../../types/filters';
+import { Box, Button, Typography } from '@mui/material';
 
-export default function TodoListFooter() {
+const TodoListFooter: React.FC = () => {
   const { todos, setTodos, filter, setFilter } = useTodos();
 
   const activeTodos = useMemo(
@@ -17,45 +18,55 @@ export default function TodoListFooter() {
 
   if (todos.length >= 1)
     return (
-      <div className={styles.container}>
-        <p className={styles.active_left}>{activeTodos} tasks left!</p>
+      <Box className={styles.container}>
+        <Typography component={'p'} sx={{}}>
+          {activeTodos} tasks left!
+        </Typography>
 
-        <div className={styles.filters}>
-          <button
-            data-filter="all"
-            onClick={() => setFilter(Filters.All)}
-            className={`${styles.filter_button}  ${
-              filter === Filters.All && styles.active
-            }`}
-          >
-            All
-          </button>
-          <button
-            data-filter="active"
-            onClick={() => setFilter(Filters.Active)}
-            className={`${styles.filter_button}  ${
-              filter === Filters.Active && styles.active
-            }`}
-          >
-            Active
-          </button>
-          <button
-            data-filter="completed"
-            onClick={() => setFilter(Filters.Completed)}
-            className={`${styles.filter_button}  ${
-              filter === Filters.Completed && styles.active
-            }`}
-          >
-            Completed
-          </button>
-        </div>
+        <Box className={styles.filters}>
+          {Object.values(Filters).map((value) => (
+            <Button
+              disableRipple
+              key={value}
+              variant="text"
+              onClick={() => setFilter(value)}
+              sx={{
+                textTransform: 'capitalize',
+                color: 'black',
+                transition: 'none',
+                boxShadow:
+                  filter === value
+                    ? '0 0 5px 2px rgba(184, 63, 69, 0.85)'
+                    : 'none',
+                '&:hover': {
+                  background: 'none',
+                },
+              }}
+            >
+              {value}
+            </Button>
+          ))}
+        </Box>
 
-        <button
-          className={styles.clear_completed}
+        <Button
+          disableRipple
+          sx={{
+            textTransform: 'none',
+            color: 'black',
+            '&:hover': {
+              background: 'none',
+              textDecoration: 'underline',
+            },
+            '&:focus': {
+              boxShadow: '0 0 5px 2px rgba(184, 63, 69, 0.85)',
+            },
+          }}
           onClick={handleClearCompleted}
         >
           Clear completed
-        </button>
-      </div>
+        </Button>
+      </Box>
     );
-}
+};
+
+export default TodoListFooter;
