@@ -1,8 +1,37 @@
 import { useMemo, useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
-import styles from './TodoForm.module.scss';
+import { TextField, Box, InputAdornment } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
 
-export default function TodoForm() {
+const ToggleAllButton: React.FC<{
+  handleFunction: () => void;
+  isChecked: boolean;
+}> = ({ handleFunction, isChecked }) => {
+  return (
+    <IconButton
+      id="toggleAll"
+      onClick={handleFunction}
+      disableRipple
+      sx={{
+        height: '100%',
+        width: '40px',
+        padding: '0',
+        fontSize: '1.5rem',
+        color: isChecked ? 'text.primary' : 'text.disabled',
+        transform: 'rotate(90deg)',
+        transition: 'transform 0.2s',
+        borderRadius: '0px',
+        '&:focus': {
+          'box-shadow': '0 0 2px 2px rgba(184, 63, 69, 0.85)',
+        },
+      }}
+    >
+      ❯
+    </IconButton>
+  );
+};
+
+const TodoForm: React.FC = () => {
   const { todos, filter, filteredTodos, setTodos } = useTodos();
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -27,7 +56,6 @@ export default function TodoForm() {
   );
 
   function handleToggleAll() {
-    console.log('handleToggleAll');
     switch (filter) {
       case 'all':
         setTodos((prevTodos) => {
@@ -80,32 +108,53 @@ export default function TodoForm() {
   }
 
   return (
-    <form
-      id="todoForm"
-      className={styles.todo_form}
+    <Box
+      component="form"
       onSubmit={handleFormSubmit}
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 2,
+        width: '50%',
+      }}
     >
-      {isToggleAllVisible && (
-        <label id="toggleAllLabel" className={styles.toggle_all_wrapper}>
-          <input
-            type="checkbox"
-            id="toggleAll"
-            onChange={handleToggleAll}
-            checked={isChecked}
-            className={styles.toggle_all}
-          />
-          <span className={styles.toggle_all_checkmark}></span>
-        </label>
-      )}
-
-      <input
+      <TextField
+        id="inputTodo"
+        variant="filled"
+        size="small"
+        placeholder="What needs to be done?"
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        id="inputTodo"
-        className={styles.input_todo}
-        type="text"
-        placeholder="What needs to be done?"
+        fullWidth
+        sx={{
+          '& .MuiInputBase-root.Mui-focused': {
+            'box-shadow': '0 0 2px 2px rgba(184, 63, 69, 0.85)',
+          },
+          '& .MuiInputBase-root': {
+            padding: '0',
+            backgroundColor: 'white',
+            height: '70px',
+          },
+        }}
+        slotProps={{
+          input: {
+            startAdornment: isToggleAllVisible && (
+              <InputAdornment
+                position="start"
+                sx={{ height: '100%', alignItems: 'stretch', p: 0, m: 0 }}
+              >
+                <ToggleAllButton
+                  handleFunction={handleToggleAll}
+                  isChecked={isChecked}
+                />
+              </InputAdornment>
+            ),
+            disableUnderline: true,
+          },
+        }}
       />
-    </form>
+    </Box>
   );
-}
+};
+
+export default TodoForm;
