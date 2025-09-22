@@ -1,34 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import { TextField, Box, InputAdornment } from '@mui/material';
-import IconButton from '@mui/material/IconButton';
-
-const ToggleAllButton: React.FC<{
-  handleFunction: () => void;
-  isChecked: boolean;
-}> = ({ handleFunction, isChecked }) => {
-  return (
-    <IconButton
-      id="toggleAll"
-      onClick={handleFunction}
-      disableRipple
-      sx={{
-        width: '40px',
-        padding: '0',
-        fontSize: '32px',
-        color: isChecked ? 'text.primary' : 'text.disabled',
-        transform: 'rotate(90deg)',
-        transition: 'transform 0.2s',
-        borderRadius: '0px',
-        '&:focus': {
-          'box-shadow': '0 0 2px 2px rgba(184, 63, 69, 0.85)',
-        },
-      }}
-    >
-      ❯
-    </IconButton>
-  );
-};
+import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
 
 const TodoForm: React.FC = () => {
   const { todos, filter, filteredTodos, setTodos } = useTodos();
@@ -144,7 +117,7 @@ const TodoForm: React.FC = () => {
         }}
         slotProps={{
           input: {
-            startAdornment: isToggleAllVisible && (
+            startAdornment: isToggleAllVisible ? (
               <InputAdornment
                 position="start"
                 sx={{
@@ -159,6 +132,8 @@ const TodoForm: React.FC = () => {
                   isChecked={isChecked !== undefined ? isChecked : false}
                 />
               </InputAdornment>
+            ) : (
+              <Box width={'40px'} />
             ),
             disableUnderline: true,
           },

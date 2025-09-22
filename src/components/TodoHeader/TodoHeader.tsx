@@ -1,4 +1,11 @@
 import { Box, Typography } from '@mui/material';
+import { styled } from '@mui/system';
+
+const MainHeader = styled('h1')({
+  color: '#b83f45',
+  fontSize: '80px',
+  fontWeight: 200,
+});
 
 const TodoHeader: React.FC = () => {
   return (
@@ -10,7 +17,7 @@ const TodoHeader: React.FC = () => {
         padding: '30px 0',
       }}
     >
-      <Typography
+      {/* <Typography
         component="h1"
         sx={{
           color: '#b83f45',
@@ -19,7 +26,8 @@ const TodoHeader: React.FC = () => {
         }}
       >
         todos
-      </Typography>
+      </Typography> */}
+      <MainHeader>todos</MainHeader>
     </Box>
   );
 };

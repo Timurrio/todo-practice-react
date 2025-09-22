@@ -31,15 +31,17 @@ const TodoListFooter: React.FC = () => {
               variant="text"
               onClick={() => setFilter(value)}
               sx={{
+                margin: '0px 7px',
                 textTransform: 'capitalize',
                 color: 'black',
-                transition: '0.2s',
+                transition: 'boxShadow 0.2s',
                 boxShadow:
                   filter === value
                     ? '0 0 5px 2px rgba(184, 63, 69, 0.85)'
                     : 'none',
                 '&:hover': {
                   background: 'none',
+                  outline: '2px solid rgba(184, 63, 69, 0.75)',
                 },
               }}
             >
