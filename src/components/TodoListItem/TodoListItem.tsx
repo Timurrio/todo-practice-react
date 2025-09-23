@@ -5,6 +5,7 @@ import { Checkbox, IconButton, ListItem, Typography } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoEditTextField from '../TodoEditTextField/TodoEditTextField';
+import { deleteTodo, updateTodo } from '../../api/todoApi';
 
 interface TodoListItemProps {
   todo: Todo;
@@ -16,6 +17,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
 
   function handleDelete() {
     setTodos((prev) => prev.filter((td) => td.id !== todo.id));
+    deleteTodo(todo.id);
   }
 
   function handleToggle() {
@@ -24,6 +26,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
         td.id === todo.id ? { ...todo, completed: !todo.completed } : td
       )
     );
+    updateTodo({ id: todo.id, text: todo.text, completed: !todo.completed });
   }
 
   return (

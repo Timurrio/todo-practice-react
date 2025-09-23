@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
+import { createTodo } from '../../api/todoApi';
 
 const TodoForm: React.FC = () => {
   const { todos, filter, filteredTodos, setTodos } = useTodos();
@@ -77,6 +78,7 @@ const TodoForm: React.FC = () => {
       ]);
     }
     setInputValue('');
+    createTodo({ text: inputValue.trim(), completed: false });
   }
 
   return (
@@ -100,7 +102,7 @@ const TodoForm: React.FC = () => {
         fullWidth
         sx={{
           '& .MuiInputBase-root.Mui-focused': {
-            'box-shadow': '0 0 2px 2px rgba(184, 63, 69, 0.85)',
+            boxShadow: '0 0 2px 2px rgba(184, 63, 69, 0.85)',
           },
           '& .MuiInputBase-root': {
             padding: '0',

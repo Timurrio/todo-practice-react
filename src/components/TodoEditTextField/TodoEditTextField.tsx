@@ -2,6 +2,7 @@ import { TextField } from '@mui/material';
 import type { Todo } from '../../types/todo';
 import { useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
+import { updateTodo } from '../../api/todoApi';
 
 interface TodoEditTextFieldProps {
   todo: Todo;
@@ -27,6 +28,11 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
         });
       }
       setIsInEditMode(false);
+      updateTodo({
+        id: todo.id,
+        text: inputValue.trim(),
+        completed: todo.completed,
+      });
     } else if (e.key === 'Escape') {
       setIsInEditMode(false);
     }

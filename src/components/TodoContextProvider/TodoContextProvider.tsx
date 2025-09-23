@@ -8,6 +8,7 @@ import React, {
 import type { Todo } from '../../types/todo';
 import Filters from '../../types/filters';
 import filterTodos from '../../functions/filterTodos';
+import { getTodos } from '../../api/todoApi';
 
 interface TodoContextType {
   todos: Todo[];
@@ -22,10 +23,16 @@ const TodoContext = createContext<TodoContextType | undefined>(undefined);
 export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const [todos, setTodos] = useState<Todo[]>(() => {
-    const saved = localStorage.getItem('todos');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [todos, setTodos] = useState<Todo[]>(() => []);
+
+  useEffect(() => {
+    async function initTodos() {
+      const res = await getTodos();
+      res ? setTodos(res) : setTodos([]);
+    }
+
+    initTodos();
+  }, []);
 
   const [filter, setFilter] = useState<Filters>(Filters.All);
 
