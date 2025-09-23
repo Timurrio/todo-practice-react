@@ -3,6 +3,7 @@ import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import styles from './TodoListFooter.module.scss';
 import Filters from '../../types/filters';
 import { Box, Button, Typography } from '@mui/material';
+import { clearCompletedTodos } from '../../api/todoApi';
 
 const TodoListFooter: React.FC = () => {
   const { todos, setTodos, filter, setFilter } = useTodos();
@@ -13,7 +14,9 @@ const TodoListFooter: React.FC = () => {
   );
 
   function handleClearCompleted() {
+    const todosToDelete = todos.filter((todo) => todo.completed === true);
     setTodos((prev) => prev.filter((todo) => todo.completed === false));
+    clearCompletedTodos(todosToDelete);
   }
 
   if (todos.length >= 1)

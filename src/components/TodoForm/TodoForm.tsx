@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react';
 import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
-import { createTodo } from '../../api/todoApi';
+import { createTodo, toggleAllTodos } from '../../api/todoApi';
+import getToggleAllTodos from '../../functions/getToggleAllTodos';
 
 const TodoForm: React.FC = () => {
   const { todos, filter, filteredTodos, setTodos } = useTodos();
@@ -29,40 +30,43 @@ const TodoForm: React.FC = () => {
   );
 
   function handleToggleAll() {
-    switch (filter) {
-      case 'all':
-        setTodos((prevTodos) => {
-          const isAllChecked = !prevTodos.some((td) => td.completed === false);
-          if (isAllChecked) {
-            return prevTodos.map((td) => ({ ...td, completed: false }));
-          } else {
-            return prevTodos.map((td) => ({ ...td, completed: true }));
-          }
-        });
-        break;
-      case 'active':
-        setTodos((prevTodos) =>
-          prevTodos.map((todo) => {
-            const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
-            if (isInFiltered) {
-              return { ...todo, completed: true };
-            }
-            return todo;
-          })
-        );
-        break;
-      case 'completed':
-        setTodos((prevTodos) =>
-          prevTodos.map((todo) => {
-            const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
-            if (isInFiltered) {
-              return { ...todo, completed: false };
-            }
-            return todo;
-          })
-        );
-        break;
-    }
+    const newTodos = getToggleAllTodos(todos, filter, filteredTodos);
+    setTodos(newTodos);
+    toggleAllTodos(newTodos);
+    // switch (filter) {
+    //   case 'all':
+    //     setTodos((prevTodos) => {
+    //       const isAllChecked = !prevTodos.some((td) => td.completed === false);
+    //       if (isAllChecked) {
+    //         return prevTodos.map((td) => ({ ...td, completed: false }));
+    //       } else {
+    //         return prevTodos.map((td) => ({ ...td, completed: true }));
+    //       }
+    //     });
+    //     break;
+    //   case 'active':
+    //     setTodos((prevTodos) =>
+    //       prevTodos.map((todo) => {
+    //         const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
+    //         if (isInFiltered) {
+    //           return { ...todo, completed: true };
+    //         }
+    //         return todo;
+    //       })
+    //     );
+    //     break;
+    //   case 'completed':
+    //     setTodos((prevTodos) =>
+    //       prevTodos.map((todo) => {
+    //         const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
+    //         if (isInFiltered) {
+    //           return { ...todo, completed: false };
+    //         }
+    //         return todo;
+    //       })
+    //     );
+    //     break;
+    // }
   }
 
   function handleFormSubmit(e: React.FormEvent) {
