@@ -29,7 +29,7 @@ export const getTodoById = async (todoId: string): Promise<Todo> => {
   return data;
 };
 
-export const clearCompletedTodos = async (todos: Todo[]): Promise<Todo[]> => {
+export const clearCompletedTodos = async (todos: Todo[]): Promise<string[]> => {
   const { data } = await api.post(`/todo/clearCompleted`, { todos: todos });
   return data;
 };

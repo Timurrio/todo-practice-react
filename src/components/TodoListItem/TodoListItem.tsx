@@ -1,32 +1,32 @@
 import { useState } from 'react';
 import type { Todo } from '../../types/todo';
-import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import { Checkbox, IconButton, ListItem, Typography } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoEditTextField from '../TodoEditTextField/TodoEditTextField';
-import { deleteTodo, updateTodo } from '../../api/todoApi';
+import { deleteTodoRequest, updateTodoRequest } from '../../store/todoSlice';
+import { useAppDispatch } from '../../store';
 
 interface TodoListItemProps {
   todo: Todo;
 }
 
 const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
-  const { setTodos } = useTodos();
+  const dispatch = useAppDispatch();
   const [isInEditMode, setIsInEditMode] = useState<boolean>(false);
 
   function handleDelete() {
-    setTodos((prev) => prev.filter((td) => td.id !== todo.id));
-    deleteTodo(todo.id);
+    dispatch(deleteTodoRequest(todo.id));
   }
 
   function handleToggle() {
-    setTodos((prev) =>
-      prev.map((td) =>
-        td.id === todo.id ? { ...todo, completed: !todo.completed } : td
-      )
+    dispatch(
+      updateTodoRequest({
+        id: todo.id,
+        text: todo.text,
+        completed: !todo.completed,
+      })
     );
-    updateTodo({ id: todo.id, text: todo.text, completed: !todo.completed });
   }
 
   return (
@@ -36,9 +36,11 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
         display: 'flex',
         alignItems: 'center',
         gap: 1,
-        textDecoration: todo.completed ? 'line-through' : 'none',
         padding: '0px',
         minHeight: '70px',
+        '& .todo-text': {
+          textDecoration: todo.completed ? 'line-through' : 'none',
+        },
         '& .delete-btn': {
           opacity: 0,
           transition: 'opacity 0.2s',
@@ -69,6 +71,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
 
           <Typography
             variant="body1"
+            className="todo-text"
             sx={{
               flex: 1,
               color: todo.completed ? 'text.secondary' : 'text.primary',

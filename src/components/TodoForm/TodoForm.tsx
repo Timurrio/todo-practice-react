@@ -1,12 +1,22 @@
 import { useMemo, useState } from 'react';
-import { useTodos } from '../TodoContextProvider/TodoContextProvider';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
-import { createTodo, toggleAllTodos } from '../../api/todoApi';
 import getToggleAllTodos from '../../functions/getToggleAllTodos';
+import { useAppDispatch, type RootState } from '../../store';
+import { useSelector } from 'react-redux';
+import { selectFilteredTodos } from '../../store/todoSelectors';
+import {
+  createTodoRequest,
+  toggleAllTodosRequest,
+  type TodoState,
+} from '../../store/todoSlice';
 
 const TodoForm: React.FC = () => {
-  const { todos, filter, filteredTodos, setTodos } = useTodos();
+  const dispatch = useAppDispatch();
+  const { filter, items: todos } = useSelector<RootState, TodoState>(
+    (state) => state.todos
+  );
+  const filteredTodos = useSelector(selectFilteredTodos);
   const [inputValue, setInputValue] = useState<string>('');
 
   const isChecked = useMemo(() => {
@@ -30,59 +40,18 @@ const TodoForm: React.FC = () => {
   );
 
   function handleToggleAll() {
-    const newTodos = getToggleAllTodos(todos, filter, filteredTodos);
-    setTodos(newTodos);
-    toggleAllTodos(newTodos);
-    // switch (filter) {
-    //   case 'all':
-    //     setTodos((prevTodos) => {
-    //       const isAllChecked = !prevTodos.some((td) => td.completed === false);
-    //       if (isAllChecked) {
-    //         return prevTodos.map((td) => ({ ...td, completed: false }));
-    //       } else {
-    //         return prevTodos.map((td) => ({ ...td, completed: true }));
-    //       }
-    //     });
-    //     break;
-    //   case 'active':
-    //     setTodos((prevTodos) =>
-    //       prevTodos.map((todo) => {
-    //         const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
-    //         if (isInFiltered) {
-    //           return { ...todo, completed: true };
-    //         }
-    //         return todo;
-    //       })
-    //     );
-    //     break;
-    //   case 'completed':
-    //     setTodos((prevTodos) =>
-    //       prevTodos.map((todo) => {
-    //         const isInFiltered = filteredTodos.some((td) => td.id === todo.id);
-    //         if (isInFiltered) {
-    //           return { ...todo, completed: false };
-    //         }
-    //         return todo;
-    //       })
-    //     );
-    //     break;
-    // }
+    const toggledTodos = getToggleAllTodos(todos, filter, filteredTodos);
+    dispatch(toggleAllTodosRequest(toggledTodos));
   }
 
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (inputValue.trim() !== '') {
-      setTodos((prev) => [
-        ...prev,
-        {
-          id: Date.now().toString(),
-          text: inputValue.trim(),
-          completed: false,
-        },
-      ]);
+      dispatch(
+        createTodoRequest({ completed: false, text: inputValue.trim() })
+      );
     }
     setInputValue('');
-    createTodo({ text: inputValue.trim(), completed: false });
   }
 
   return (

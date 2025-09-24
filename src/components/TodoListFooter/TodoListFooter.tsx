@@ -4,9 +4,21 @@ import styles from './TodoListFooter.module.scss';
 import Filters from '../../types/filters';
 import { Box, Button, Typography } from '@mui/material';
 import { clearCompletedTodos } from '../../api/todoApi';
+import { useSelector } from 'react-redux';
+import { useAppDispatch, type RootState } from '../../store';
+import {
+  clearCompletedTodosRequest,
+  setFilter,
+  type TodoState,
+} from '../../store/todoSlice';
 
 const TodoListFooter: React.FC = () => {
-  const { todos, setTodos, filter, setFilter } = useTodos();
+  // const { todos, setTodos, filter, setFilter } = useTodos();
+  const { items: todos, filter } = useSelector<RootState, TodoState>(
+    (state) => state.todos
+  );
+
+  const dispatch = useAppDispatch();
 
   const activeTodos = useMemo(
     () => todos.filter((todo) => todo.completed === false).length,
@@ -15,8 +27,7 @@ const TodoListFooter: React.FC = () => {
 
   function handleClearCompleted() {
     const todosToDelete = todos.filter((todo) => todo.completed === true);
-    setTodos((prev) => prev.filter((todo) => todo.completed === false));
-    clearCompletedTodos(todosToDelete);
+    dispatch(clearCompletedTodosRequest(todosToDelete));
   }
 
   if (todos.length >= 1)
@@ -32,7 +43,8 @@ const TodoListFooter: React.FC = () => {
               disableRipple
               key={value}
               variant="text"
-              onClick={() => setFilter(value)}
+              onClick={() => dispatch(setFilter(value))}
+              disabled={filter === value}
               sx={{
                 margin: '0px 7px',
                 textTransform: 'capitalize',
@@ -45,6 +57,9 @@ const TodoListFooter: React.FC = () => {
                 '&:hover': {
                   background: 'none',
                   outline: '2px solid rgba(184, 63, 69, 0.75)',
+                },
+                '&:disabled': {
+                  color: 'gray',
                 },
               }}
             >

@@ -1,8 +1,8 @@
 import { TextField } from '@mui/material';
 import type { Todo } from '../../types/todo';
 import { useState } from 'react';
-import { useTodos } from '../TodoContextProvider/TodoContextProvider';
-import { updateTodo } from '../../api/todoApi';
+import { updateTodoRequest } from '../../store/todoSlice';
+import { useAppDispatch } from '../../store';
 
 interface TodoEditTextFieldProps {
   todo: Todo;
@@ -13,26 +13,20 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
   todo,
   setIsInEditMode,
 }) => {
-  const { setTodos } = useTodos();
   const [inputValue, setInputValue] = useState<string>(todo.text);
+  const dispatch = useAppDispatch();
 
   function handleChangeText(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       if (inputValue.trim() !== '') {
-        setTodos((prevTodos) => {
-          return prevTodos.map<Todo>((td) => {
-            return td.id === todo.id
-              ? { ...todo, text: inputValue.trim() }
-              : td;
-          });
-        });
+        dispatch(
+          updateTodoRequest({
+            id: todo.id,
+            text: inputValue.trim(),
+            completed: todo.completed,
+          })
+        );
       }
-      setIsInEditMode(false);
-      updateTodo({
-        id: todo.id,
-        text: inputValue.trim(),
-        completed: todo.completed,
-      });
     } else if (e.key === 'Escape') {
       setIsInEditMode(false);
     }

@@ -1,4 +1,4 @@
-import type { Filters } from '../types/filters';
+import Filters from '../types/filters';
 import type { Todo } from '../types/todo';
 
 export default function filterTodos(todos: Todo[], filter: Filters) {
