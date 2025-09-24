@@ -1,9 +1,6 @@
 import { useMemo } from 'react';
-import { useTodos } from '../TodoContextProvider/TodoContextProvider';
-import styles from './TodoListFooter.module.scss';
 import Filters from '../../types/filters';
 import { Box, Button, Typography } from '@mui/material';
-import { clearCompletedTodos } from '../../api/todoApi';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, type RootState } from '../../store';
 import {
@@ -13,7 +10,6 @@ import {
 } from '../../store/todoSlice';
 
 const TodoListFooter: React.FC = () => {
-  // const { todos, setTodos, filter, setFilter } = useTodos();
   const { items: todos, filter } = useSelector<RootState, TodoState>(
     (state) => state.todos
   );
@@ -32,12 +28,21 @@ const TodoListFooter: React.FC = () => {
 
   if (todos.length >= 1)
     return (
-      <Box className={styles.container}>
+      <Box
+        sx={{
+          width: '50%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '20px 15px',
+          backgroundColor: 'white',
+        }}
+      >
         <Typography component={'p'} sx={{}}>
           {activeTodos} tasks left!
         </Typography>
 
-        <Box className={styles.filters}>
+        <Box>
           {Object.values(Filters).map((value) => (
             <Button
               disableRipple

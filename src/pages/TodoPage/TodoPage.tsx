@@ -1,9 +1,9 @@
 import TodoHeader from '../../components/TodoHeader/TodoHeader';
 import TodoMain from '../../components/TodoMain/TodoMain';
-import styles from './TodoPage.module.scss';
 import { useAppDispatch } from '../../store';
 import { useEffect } from 'react';
 import { fetchTodosRequest } from '../../store/todoSlice';
+import { Box } from '@mui/material';
 
 const TodoPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -13,10 +13,10 @@ const TodoPage: React.FC = () => {
   }, []);
 
   return (
-    <div className={styles.container}>
+    <Box sx={{ width: '100vw', height: '100vh' }}>
       <TodoHeader />
       <TodoMain />
-    </div>
+    </Box>
   );
 };
 

@@ -34,7 +34,7 @@ export const clearCompletedTodos = async (todos: Todo[]): Promise<string[]> => {
   return data;
 };
 
-export const toggleAllTodos = async (todos: Todo[]): Promise<unknown> => {
+export const toggleAllTodos = async (todos: Todo[]): Promise<Todo[]> => {
   const { data } = await api.put(`/todo/toggleAll`, { todos: todos });
   return data;
 };
