@@ -35,12 +35,10 @@ function* fetchTodosSaga() {
 
 function* createTodoSaga(action: PayloadAction<Omit<Todo, 'id'>>) {
   try {
-    console.log('createTodoSaga');
     const newTodo: Todo = yield call(api.createTodo, action.payload);
 
     yield put(createTodoSuccess(newTodo));
   } catch (err: any) {
-    console.log('createTodoSagafAILURE');
     yield put(createTodoFailure(err.message));
   }
 }
