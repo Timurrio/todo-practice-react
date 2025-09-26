@@ -45,7 +45,6 @@ import type { User } from '../types/User';
 interface DecodedToken {
   id: number;
   email: string;
-  role: string;
   name: string;
   exp: number;
   iat: number;
@@ -56,7 +55,6 @@ function decodeToken(token: string): User {
   return {
     id: decoded.id,
     email: decoded.email,
-    role: decoded.role,
     name: decoded.name,
   };
 }

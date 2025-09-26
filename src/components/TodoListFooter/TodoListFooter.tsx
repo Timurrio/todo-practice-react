@@ -30,7 +30,7 @@ const TodoListFooter: React.FC = () => {
     return (
       <Box
         sx={{
-          width: '50%',
+          width: '100%',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',

@@ -12,7 +12,7 @@ const TodoMain: React.FC = () => {
     <Box
       component="main"
       sx={{
-        width: '100%',
+        width: '50%',
         display: 'flex',
         alignItems: 'center',
         flexDirection: 'column',

@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TextField, Button, Box } from '@mui/material';
+import * as Yup from 'yup';
 import type { AuthMode } from '../../types/AuthMode';
+import { useAppDispatch } from '../../store';
+import { clearError } from '../../store/userSlice';
 
 interface AuthFormProps {
   mode: AuthMode;
@@ -14,7 +17,7 @@ interface LoginValues {
 }
 
 interface RegisterValues extends LoginValues {
-  username: string;
+  name: string;
   confirmPassword: string;
 }
 
@@ -22,60 +25,46 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
   const initialValues: LoginValues | RegisterValues =
     mode === 'login'
       ? { email: '', password: '' }
-      : { username: '', email: '', password: '', confirmPassword: '' };
+      : { name: '', email: '', password: '', confirmPassword: '' };
 
-  const validate = (values: any) => {
-    const errors: Partial<any> = {};
-
-    if (mode === 'register') {
-      if (!values.username) {
-        errors.username = 'Username is required';
-      } else if (values.username.length < 3) {
-        errors.username = 'Username must be at least 3 characters';
-      }
-    }
-
-    if (!values.email) {
-      errors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(values.email)) {
-      errors.email = 'Invalid email format';
-    }
-
-    if (!values.password) {
-      errors.password = 'Password is required';
-    } else if (values.password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
-    }
-
-    if (mode === 'register') {
-      if (!values.confirmPassword) {
-        errors.confirmPassword = 'Please confirm your password';
-      } else if (values.confirmPassword !== values.password) {
-        errors.confirmPassword = 'Passwords do not match';
-      }
-    }
-
-    return errors;
-  };
+  const validationSchema = Yup.object().shape({
+    ...(mode === 'register' && {
+      name: Yup.string()
+        .required('Name is required')
+        .min(3, 'Name must be at least 3 characters'),
+    }),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Invalid email format'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+    ...(mode === 'register' && {
+      confirmPassword: Yup.string()
+        .required('Please confirm your password')
+        .oneOf([Yup.ref('password')], 'Passwords do not match'),
+    }),
+  });
 
   return (
     <Box sx={{ width: '100%' }}>
       <Formik
         initialValues={initialValues}
-        validate={validate}
+        validationSchema={validationSchema}
         onSubmit={(values) => onSubmit(values)}
+        enableReinitialize
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, isValid, dirty }) => (
           <Form>
             {mode === 'register' && (
               <Box mb={2}>
                 <Field
-                  name="username"
+                  name="name"
                   as={TextField}
-                  label="Username"
+                  label="Name"
                   fullWidth
-                  error={touched.username && Boolean(errors.username)}
-                  helperText={<ErrorMessage name="username" />}
+                  error={touched.name && Boolean(errors.name)}
+                  helperText={<ErrorMessage name="name" />}
                 />
               </Box>
             )}
@@ -124,6 +113,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
               variant="contained"
               color={mode === 'login' ? 'primary' : 'success'}
               fullWidth
+              disabled={!isValid || !dirty}
             >
               {mode === 'login' ? 'Login' : 'Register'}
             </Button>

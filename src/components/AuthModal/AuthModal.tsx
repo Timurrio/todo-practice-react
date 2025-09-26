@@ -1,17 +1,29 @@
 import { Box, Button, capitalize, Typography } from '@mui/material';
 import AuthForm from '../AuthForm/AuthForm';
 import type { AuthMode } from '../../types/AuthMode';
-import { useMemo, useState } from 'react';
-import { login, register } from '../../api/userApi';
+import { useEffect, useMemo, useState } from 'react';
+import { useAppDispatch, type RootState } from '../../store';
+import {
+  clearError,
+  loginRequest,
+  registerRequest,
+  setIsModalVisible,
+  type UserState,
+} from '../../store/userSlice';
+import { useSelector } from 'react-redux';
 
-interface AuthModalProps {
-  setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const AuthModal: React.FC<AuthModalProps> = ({ setIsVisible }) => {
+export const AuthModal: React.FC = () => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
+  const dispatch = useAppDispatch();
+  const { error } = useSelector<RootState, UserState>((state) => state.user);
+
   const onSubmitFunction = useMemo(
-    () => (authMode === 'login' ? login : register),
+    () =>
+      authMode === 'login'
+        ? (val: { email: string; password: string }) =>
+            dispatch(loginRequest(val))
+        : (val: { email: string; password: string; name: string }) =>
+            dispatch(registerRequest(val)),
     [authMode]
   );
 
@@ -27,6 +39,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ setIsVisible }) => {
         bgcolor: 'rgba(0,0,0,0.5)',
         zIndex: '999',
       }}
+      onClick={(e) => {
+        e.preventDefault();
+        dispatch(setIsModalVisible(false));
+      }}
     >
       <Box
         sx={{
@@ -38,6 +54,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ setIsVisible }) => {
           minWidth: '300px',
           width: '35vw',
         }}
+        onClick={(e) => e.stopPropagation()}
       >
         <Typography
           sx={{ marginBottom: '30px', fontSize: '40px', fontWeight: 'bold' }}
@@ -45,15 +62,19 @@ export const AuthModal: React.FC<AuthModalProps> = ({ setIsVisible }) => {
         >
           {capitalize(authMode)}
         </Typography>
+        <Typography component={'p'} color="error">
+          {error && error}
+        </Typography>
         <AuthForm mode={authMode} onSubmit={onSubmitFunction} />
         <Button
           variant="text"
           sx={{ marginTop: '25px' }}
-          onClick={() =>
+          onClick={() => {
+            dispatch(clearError());
             setAuthMode((prev) => {
               return prev === 'login' ? 'register' : 'login';
-            })
-          }
+            });
+          }}
         >
           {authMode === 'login'
             ? 'I don`t have an account yet'

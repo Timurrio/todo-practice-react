@@ -8,7 +8,7 @@ interface TodoListProps {
 
 const TodoList: React.FC<TodoListProps> = ({ todos }) => {
   return (
-    <List sx={{ padding: '0', width: '50%', backgroundColor: 'white' }}>
+    <List sx={{ padding: '0', width: '100%', backgroundColor: 'white' }}>
       {todos.map((todo) => (
         <TodoListItem key={todo.id} todo={todo} />
       ))}

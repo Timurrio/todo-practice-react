@@ -1,19 +1,23 @@
 import TodoHeader from '../../components/TodoHeader/TodoHeader';
 import TodoMain from '../../components/TodoMain/TodoMain';
 import { useAppDispatch } from '../../store';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { fetchTodosRequest } from '../../store/todoSlice';
-import { Box } from '@mui/material';
-import AuthForm from '../../components/AuthForm/AuthForm';
+import { Box, CircularProgress } from '@mui/material';
 import { AuthModal } from '../../components/AuthModal/AuthModal';
-import { initializeAuthRequest } from '../../store/userSlice';
+import {
+  initializeAuthRequest,
+  setIsModalVisible,
+} from '../../store/userSlice';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
+import UserMenu from '../../components/UserMenu/UserMenu';
 
 const TodoPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, loading } = useSelector((state: RootState) => state.user);
-  const [isVisible, setIsVisible] = useState<boolean>(false);
+  const { user, loading, isModalVisible } = useSelector(
+    (state: RootState) => state.user
+  );
 
   useEffect(() => {
     dispatch(initializeAuthRequest());
@@ -23,18 +27,31 @@ const TodoPage: React.FC = () => {
     if (!loading) {
       if (user) {
         dispatch(fetchTodosRequest());
-        setIsVisible(false);
+        dispatch(setIsModalVisible(false));
       } else {
-        setIsVisible(true);
+        dispatch(setIsModalVisible(true));
       }
     }
   }, [user, loading]);
 
   return (
-    <Box sx={{ width: '100vw', height: '100vh' }}>
-      {isVisible && <AuthModal setIsVisible={setIsVisible} />}
+    <Box
+      sx={{
+        width: '100vw',
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+      }}
+    >
+      {!loading && isModalVisible && <AuthModal />}
       <TodoHeader />
-      <TodoMain />
+      <UserMenu />
+      {loading || !user ? (
+        <CircularProgress size={60} color="error" />
+      ) : (
+        <TodoMain />
+      )}
     </Box>
   );
 };

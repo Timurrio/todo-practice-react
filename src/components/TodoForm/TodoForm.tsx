@@ -62,7 +62,7 @@ const TodoForm: React.FC = () => {
         display: 'flex',
         alignItems: 'center',
         gap: 2,
-        width: '50%',
+        width: '100%',
         padding: 0,
       }}
     >

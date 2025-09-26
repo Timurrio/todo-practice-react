@@ -38,7 +38,6 @@ const todoSlice = createSlice({
       state.loading = true;
     },
     createTodoSuccess: (state, action: PayloadAction<Todo>) => {
-      console.log('createTodoSuccess');
       state.items.push(action.payload);
       state.loading = false;
     },
