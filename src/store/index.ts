@@ -4,6 +4,7 @@ import todoReducer from './todoSlice/todoSlice';
 import userReducer from './userSlice/userSlice';
 import { useDispatch } from 'react-redux';
 import rootSaga from './rootSaga';
+import { todoApi } from './todoSlice/todoService';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -11,9 +12,12 @@ export const store = configureStore({
   reducer: {
     todos: todoReducer,
     user: userReducer,
+    [todoApi.reducerPath]: todoApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({ thunk: false }).concat(sagaMiddleware),
+    getDefaultMiddleware({ thunk: false })
+      .concat(sagaMiddleware)
+      .concat(todoApi.middleware),
 });
 
 sagaMiddleware.run(rootSaga);
