@@ -1,7 +1,7 @@
 import { TextField } from '@mui/material';
 import type { Todo } from '../../types/todo';
 import { useState } from 'react';
-import { updateTodoRequest } from '../../store/todoSlice';
+import { updateTodoRequest } from '../../store/todoSlice/todoSlice';
 import { useAppDispatch } from '../../store';
 
 interface TodoEditTextFieldProps {

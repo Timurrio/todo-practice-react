@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import createSagaMiddleware from 'redux-saga';
-import todoReducer from './todoSlice';
-import userReducer from './userSlice';
+import todoReducer from './todoSlice/todoSlice';
+import userReducer from './userSlice/userSlice';
 import { useDispatch } from 'react-redux';
 import rootSaga from './rootSaga';
 

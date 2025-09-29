@@ -1,7 +1,7 @@
 import { Box, Button, capitalize, Typography } from '@mui/material';
 import AuthForm from '../AuthForm/AuthForm';
 import type { AuthMode } from '../../types/AuthMode';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useAppDispatch, type RootState } from '../../store';
 import {
   clearError,
@@ -9,7 +9,7 @@ import {
   registerRequest,
   setIsModalVisible,
   type UserState,
-} from '../../store/userSlice';
+} from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 
 export const AuthModal: React.FC = () => {

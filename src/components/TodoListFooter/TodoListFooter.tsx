@@ -7,7 +7,7 @@ import {
   clearCompletedTodosRequest,
   setFilter,
   type TodoState,
-} from '../../store/todoSlice';
+} from '../../store/todoSlice/todoSlice';
 
 const TodoListFooter: React.FC = () => {
   const { items: todos, filter } = useSelector<RootState, TodoState>(

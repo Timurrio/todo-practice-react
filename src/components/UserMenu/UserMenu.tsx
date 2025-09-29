@@ -4,12 +4,12 @@ import {
   logout,
   setIsModalVisible,
   type UserState,
-} from '../../store/userSlice';
+} from '../../store/userSlice/userSlice';
 import { Box, Button, Typography } from '@mui/material';
 
 const UserMenu: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, loading, token, error } = useSelector<RootState, UserState>(
+  const { user, loading } = useSelector<RootState, UserState>(
     (state) => state.user
   );
 

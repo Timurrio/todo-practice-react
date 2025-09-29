@@ -28,7 +28,7 @@
 
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { jwtDecode } from 'jwt-decode';
-import * as api from '../api/userApi';
+import * as api from '../../api/userApi';
 import {
   initializeAuthRequest,
   initializeAuthSuccess,
@@ -40,7 +40,7 @@ import {
   loginSuccess,
   loginFailure,
 } from './userSlice';
-import type { User } from '../types/User';
+import type { User } from '../../types/User';
 
 interface DecodedToken {
   id: number;

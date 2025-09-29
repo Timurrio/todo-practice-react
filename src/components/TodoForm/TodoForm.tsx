@@ -4,12 +4,12 @@ import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
 import getToggleAllTodos from '../../functions/getToggleAllTodos';
 import { useAppDispatch, type RootState } from '../../store';
 import { useSelector } from 'react-redux';
-import { selectFilteredTodos } from '../../store/todoSelectors';
+import { selectFilteredTodos } from '../../store/todoSlice/todoSelectors';
 import {
   createTodoRequest,
   toggleAllTodosRequest,
   type TodoState,
-} from '../../store/todoSlice';
+} from '../../store/todoSlice/todoSlice';
 
 const TodoForm: React.FC = () => {
   const dispatch = useAppDispatch();

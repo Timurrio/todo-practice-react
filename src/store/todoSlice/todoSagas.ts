@@ -1,6 +1,6 @@
 // store/todoSagas.ts
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import * as api from '../api/todoApi';
+import * as api from '../../api/todoApi';
 import {
   fetchTodosRequest,
   fetchTodosSuccess,
@@ -22,7 +22,7 @@ import {
   toggleAllTodosRequest,
 } from './todoSlice';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import type { Todo } from '../types/todo';
+import type { Todo } from '../../types/todo';
 
 function* fetchTodosSaga() {
   try {

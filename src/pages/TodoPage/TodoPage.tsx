@@ -2,13 +2,13 @@ import TodoHeader from '../../components/TodoHeader/TodoHeader';
 import TodoMain from '../../components/TodoMain/TodoMain';
 import { useAppDispatch } from '../../store';
 import { useEffect } from 'react';
-import { fetchTodosRequest } from '../../store/todoSlice';
+import { fetchTodosRequest } from '../../store/todoSlice/todoSlice';
 import { Box, CircularProgress } from '@mui/material';
 import { AuthModal } from '../../components/AuthModal/AuthModal';
 import {
   initializeAuthRequest,
   setIsModalVisible,
-} from '../../store/userSlice';
+} from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
 import UserMenu from '../../components/UserMenu/UserMenu';

@@ -4,7 +4,10 @@ import { Checkbox, IconButton, ListItem, Typography } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoEditTextField from '../TodoEditTextField/TodoEditTextField';
-import { deleteTodoRequest, updateTodoRequest } from '../../store/todoSlice';
+import {
+  deleteTodoRequest,
+  updateTodoRequest,
+} from '../../store/todoSlice/todoSlice';
 import { useAppDispatch } from '../../store';
 
 interface TodoListItemProps {

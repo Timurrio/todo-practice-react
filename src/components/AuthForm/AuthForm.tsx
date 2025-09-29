@@ -1,10 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TextField, Button, Box } from '@mui/material';
 import * as Yup from 'yup';
 import type { AuthMode } from '../../types/AuthMode';
-import { useAppDispatch } from '../../store';
-import { clearError } from '../../store/userSlice';
 
 interface AuthFormProps {
   mode: AuthMode;
