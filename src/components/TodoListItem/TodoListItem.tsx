@@ -16,7 +16,7 @@ interface TodoListItemProps {
 
 const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
   const dispatch = useAppDispatch();
-  const [isInEditMode, setIsInEditMode] = useState<boolean>(false);
+  const [isEditMode, setisEditMode] = useState<boolean>(false);
 
   function handleDelete() {
     dispatch(deleteTodoRequest(todo.id));
@@ -28,6 +28,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
         id: todo.id,
         text: todo.text,
         completed: !todo.completed,
+        userId: todo.userId,
       })
     );
   }
@@ -52,10 +53,10 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
           opacity: 1,
         },
       }}
-      onDoubleClick={() => setIsInEditMode(true)}
+      onDoubleClick={() => setisEditMode(true)}
     >
-      {isInEditMode ? (
-        <TodoEditTextField setIsInEditMode={setIsInEditMode} todo={todo} />
+      {isEditMode ? (
+        <TodoEditTextField setIsInEditMode={setisEditMode} todo={todo} />
       ) : (
         <>
           <Checkbox

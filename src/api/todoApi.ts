@@ -1,5 +1,9 @@
 import api from './index';
 import type { Todo } from '../types/todo';
+import { useSelector } from 'react-redux';
+import type { UserState } from '../store/userSlice/userSlice';
+import type { RootState } from '../store';
+import type { User } from '../types/User';
 
 export const createTodo = async (todoData: Omit<Todo, 'id'>): Promise<Todo> => {
   const { data } = await api.post(`/todo`, todoData);
@@ -19,8 +23,8 @@ export const deleteTodo = async (todoId: string): Promise<Todo> => {
   return data;
 };
 
-export const getTodos = async (): Promise<Todo[]> => {
-  const { data } = await api.get(`/todo`);
+export const getTodos = async (userId: string): Promise<Todo[]> => {
+  const { data } = await api.get(`/todo/${userId}`);
   return data;
 };
 

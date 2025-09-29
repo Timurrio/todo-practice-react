@@ -24,9 +24,9 @@ import {
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { Todo } from '../../types/todo';
 
-function* fetchTodosSaga() {
+function* fetchTodosSaga(action: PayloadAction<string>) {
   try {
-    const todos: Todo[] = yield call(api.getTodos);
+    const todos: Todo[] = yield call(api.getTodos, action.payload);
     yield put(fetchTodosSuccess(todos));
   } catch (err: any) {
     yield put(fetchTodosFailure(err.message));

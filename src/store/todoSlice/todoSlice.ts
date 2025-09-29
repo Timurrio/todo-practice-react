@@ -21,7 +21,7 @@ const todoSlice = createSlice({
   name: 'todos',
   initialState,
   reducers: {
-    fetchTodosRequest: (state) => {
+    fetchTodosRequest: (state, action: PayloadAction<string>) => {
       state.loading = true;
       state.error = null;
     },
@@ -34,7 +34,7 @@ const todoSlice = createSlice({
       state.error = action.payload;
     },
 
-    createTodoRequest: (state, _action: PayloadAction<Omit<Todo, 'id'>>) => {
+    createTodoRequest: (state, action: PayloadAction<Omit<Todo, 'id'>>) => {
       state.loading = true;
     },
     createTodoSuccess: (state, action: PayloadAction<Todo>) => {

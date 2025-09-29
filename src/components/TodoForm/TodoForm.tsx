@@ -10,23 +10,26 @@ import {
   toggleAllTodosRequest,
   type TodoState,
 } from '../../store/todoSlice/todoSlice';
+import type { UserState } from '../../store/userSlice/userSlice';
 
 const TodoForm: React.FC = () => {
   const dispatch = useAppDispatch();
   const { filter, items: todos } = useSelector<RootState, TodoState>(
     (state) => state.todos
   );
+  const { user } = useSelector<RootState, UserState>((state) => state.user);
   const filteredTodos = useSelector(selectFilteredTodos);
   const [inputValue, setInputValue] = useState<string>('');
 
   const isChecked = useMemo(() => {
     switch (filter) {
       case 'all':
-        if (todos.some((td) => td.completed === false)) {
-          return false;
-        } else {
-          return true;
-        }
+        // if (todos.some((td) => td.completed === false)) {
+        //   return false;
+        // } else {
+        //   return true;
+        // }
+        return !todos.some((td) => td.completed === false);
       case 'active':
         return false;
       case 'completed':
@@ -35,7 +38,7 @@ const TodoForm: React.FC = () => {
   }, [todos, filter]);
 
   const isToggleAllVisible = useMemo(
-    () => (filteredTodos.length > 0 ? true : false),
+    () => filteredTodos.length > 0,
     [filteredTodos]
   );
 
@@ -46,9 +49,13 @@ const TodoForm: React.FC = () => {
 
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (inputValue.trim() !== '') {
+    if (inputValue.trim() !== '' && user) {
       dispatch(
-        createTodoRequest({ completed: false, text: inputValue.trim() })
+        createTodoRequest({
+          completed: false,
+          text: inputValue.trim(),
+          userId: user.id,
+        })
       );
     }
     setInputValue('');

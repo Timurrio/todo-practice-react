@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { User } from '../../types/User';
+import type { User, UserWithoutPassword } from '../../types/User';
 import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface UserState {
-  user: User | null;
+  user: UserWithoutPassword | null;
   token: string | null;
   loading: boolean;
   error: string | null;
@@ -28,7 +28,10 @@ const userSlice = createSlice({
     },
     initializeAuthSuccess: (
       state,
-      action: PayloadAction<{ user: User | null; token: string | null }>
+      action: PayloadAction<{
+        user: UserWithoutPassword | null;
+        token: string | null;
+      }>
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -48,7 +51,7 @@ const userSlice = createSlice({
     },
     registerSuccess: (
       state,
-      action: PayloadAction<{ user: User; token: string }>
+      action: PayloadAction<{ user: UserWithoutPassword; token: string }>
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
@@ -68,7 +71,7 @@ const userSlice = createSlice({
     },
     loginSuccess: (
       state,
-      action: PayloadAction<{ user: User; token: string }>
+      action: PayloadAction<{ user: UserWithoutPassword; token: string }>
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;

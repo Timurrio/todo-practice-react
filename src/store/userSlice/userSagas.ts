@@ -1,31 +1,3 @@
-// import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-// import * as api from '../api/userApi';
-// import {
-//   initializeAuthRequest,
-//   initializeAuthFailure,
-//   initializeAuthSuccess,
-// } from './userSlice';
-// import type { PayloadAction } from '@reduxjs/toolkit';
-// import type { User } from '../types/User';
-
-// function* initializeAuthSaga() {
-//   try {
-//     const savedUser = localStorage.getItem('user');
-//     if (savedUser) {
-//       const checkSavedUser: User = yield call(api.check, JSON.parse(savedUser));
-//       yield put(initializeAuthSuccess(checkSavedUser));
-//     } else {
-//       yield put(initializeAuthSuccess(null));
-//     }
-//   } catch (err: any) {
-//     yield put(initializeAuthFailure(err.message));
-//   }
-// }
-
-// export default function* userSagas() {
-//   yield takeLatest(initializeAuthRequest.type, initializeAuthSaga);
-// }
-
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { jwtDecode } from 'jwt-decode';
 import * as api from '../../api/userApi';
@@ -43,15 +15,16 @@ import {
 import type { User } from '../../types/User';
 
 interface DecodedToken {
-  id: number;
+  id: string;
   email: string;
   name: string;
   exp: number;
   iat: number;
 }
 
-function decodeToken(token: string): User {
+function decodeToken(token: string): Omit<User, 'password'> {
   const decoded: DecodedToken = jwtDecode(token);
+  console.log('decoded', decoded);
   return {
     id: decoded.id,
     email: decoded.email,

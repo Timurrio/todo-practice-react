@@ -26,7 +26,7 @@ const TodoPage: React.FC = () => {
   useEffect(() => {
     if (!loading) {
       if (user) {
-        dispatch(fetchTodosRequest());
+        dispatch(fetchTodosRequest(user.id));
         dispatch(setIsModalVisible(false));
       } else {
         dispatch(setIsModalVisible(true));

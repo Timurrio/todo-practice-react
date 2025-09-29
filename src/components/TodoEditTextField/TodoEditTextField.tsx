@@ -24,6 +24,7 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
             id: todo.id,
             text: inputValue.trim(),
             completed: todo.completed,
+            userId: todo.userId,
           })
         );
       }
