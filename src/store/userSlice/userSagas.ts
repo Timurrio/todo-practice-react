@@ -12,7 +12,7 @@ import {
   loginSuccess,
   loginFailure,
 } from './userSlice';
-import type { User } from '../../types/User';
+import type { User, UserWithoutPassword } from '../../types/User';
 
 interface DecodedToken {
   id: string;
@@ -22,7 +22,7 @@ interface DecodedToken {
   iat: number;
 }
 
-function decodeToken(token: string): Omit<User, 'password'> {
+function decodeToken(token: string): UserWithoutPassword {
   const decoded: DecodedToken = jwtDecode(token);
   console.log('decoded', decoded);
   return {
