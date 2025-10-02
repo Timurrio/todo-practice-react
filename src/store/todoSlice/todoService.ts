@@ -21,11 +21,6 @@ export const todoApi = createApi({
       providesTags: ['Todo'],
     }),
 
-    // getTodoById: builder.query<Todo, string>({
-    //   query: (id) => `/todo/${id}`,
-    //   providesTags: (result, error, id) => [{ type: 'Todo', id }],
-    // }),
-
     createTodo: builder.mutation<Todo, Omit<Todo, 'id'>>({
       query: (todo) => ({
         url: '/todo',

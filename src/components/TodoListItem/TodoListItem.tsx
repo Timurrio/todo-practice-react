@@ -4,33 +4,37 @@ import { Checkbox, IconButton, ListItem, Typography } from '@mui/material';
 import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import TodoEditTextField from '../TodoEditTextField/TodoEditTextField';
+
 import {
-  deleteTodoRequest,
-  updateTodoRequest,
-} from '../../store/todoSlice/todoSlice';
-import { useAppDispatch } from '../../store';
+  useDeleteTodoMutation,
+  useUpdateTodoMutation,
+} from '../../store/todoSlice/todoService';
+import type { UserState } from '../../store/userSlice/userSlice';
+import { useSelector } from 'react-redux';
+import type { RootState } from '../../store';
 
 interface TodoListItemProps {
   todo: Todo;
 }
 
 const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
-  const dispatch = useAppDispatch();
   const [isEditMode, setisEditMode] = useState<boolean>(false);
+  const { user } = useSelector<RootState, UserState>((state) => state.user);
+
+  const [deleteTodo] = useDeleteTodoMutation();
+  const [updateTodo] = useUpdateTodoMutation();
 
   function handleDelete() {
-    dispatch(deleteTodoRequest(todo.id));
+    user && deleteTodo({ id: todo.id, userId: user.id });
   }
 
   function handleToggle() {
-    dispatch(
-      updateTodoRequest({
-        id: todo.id,
-        text: todo.text,
-        completed: !todo.completed,
-        userId: todo.userId,
-      })
-    );
+    updateTodo({
+      id: todo.id,
+      text: todo.text,
+      completed: !todo.completed,
+      userId: todo.userId,
+    });
   }
 
   return (

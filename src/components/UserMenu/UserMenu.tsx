@@ -9,7 +9,7 @@ import { Box, Button, Typography } from '@mui/material';
 
 const UserMenu: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, loading } = useSelector<RootState, UserState>(
+  const { user, isLoading: loading } = useSelector<RootState, UserState>(
     (state) => state.user
   );
 

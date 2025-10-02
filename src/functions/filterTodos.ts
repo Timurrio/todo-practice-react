@@ -1,8 +1,14 @@
 import Filters from '../types/filters';
 import type { Todo } from '../types/todo';
 
-export default function filterTodos(todos: Todo[], filter: Filters) {
+export default function filterTodos(
+  todos: Todo[] | undefined,
+  filter: Filters
+) {
   let filteredTodos: Todo[] = [];
+  if (todos === undefined) {
+    return [];
+  }
   switch (filter) {
     case 'all':
       filteredTodos = todos;

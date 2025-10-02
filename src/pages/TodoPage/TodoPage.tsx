@@ -2,12 +2,11 @@ import TodoHeader from '../../components/TodoHeader/TodoHeader';
 import TodoMain from '../../components/TodoMain/TodoMain';
 import { useAppDispatch } from '../../store';
 import { useEffect } from 'react';
-import { fetchTodosRequest } from '../../store/todoSlice/todoSlice';
 import { Box, CircularProgress } from '@mui/material';
 import { AuthModal } from '../../components/AuthModal/AuthModal';
 import {
-  initializeAuthRequest,
   setIsModalVisible,
+  type UserState,
 } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
@@ -15,24 +14,20 @@ import UserMenu from '../../components/UserMenu/UserMenu';
 
 const TodoPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, loading, isModalVisible } = useSelector(
+
+  const { isModalVisible, user, isLoading } = useSelector(
     (state: RootState) => state.user
   );
 
   useEffect(() => {
-    dispatch(initializeAuthRequest());
-  }, []);
-
-  useEffect(() => {
-    if (!loading) {
+    if (!isLoading) {
       if (user) {
-        dispatch(fetchTodosRequest(user.id));
         dispatch(setIsModalVisible(false));
       } else {
         dispatch(setIsModalVisible(true));
       }
     }
-  }, [user, loading]);
+  }, [user]);
 
   return (
     <Box
@@ -44,10 +39,10 @@ const TodoPage: React.FC = () => {
         alignItems: 'center',
       }}
     >
-      {!loading && isModalVisible && <AuthModal />}
+      {!isLoading && isModalVisible && <AuthModal />}
       <TodoHeader />
       <UserMenu />
-      {loading || !user ? (
+      {isLoading || !user ? (
         <CircularProgress size={60} color="error" />
       ) : (
         <TodoMain />

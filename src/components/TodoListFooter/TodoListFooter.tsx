@@ -3,30 +3,36 @@ import Filters from '../../types/filters';
 import { Box, Button, Typography } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { useAppDispatch, type RootState } from '../../store';
+import { setFilter, type TodoState } from '../../store/todoSlice/todoSlice';
 import {
-  clearCompletedTodosRequest,
-  setFilter,
-  type TodoState,
-} from '../../store/todoSlice/todoSlice';
+  useClearCompletedTodosMutation,
+  useGetTodosQuery,
+} from '../../store/todoSlice/todoService';
+import type { UserState } from '../../store/userSlice/userSlice';
 
 const TodoListFooter: React.FC = () => {
-  const { items: todos, filter } = useSelector<RootState, TodoState>(
-    (state) => state.todos
-  );
+  const { filter } = useSelector<RootState, TodoState>((state) => state.todos);
+
+  const { user } = useSelector<RootState, UserState>((state) => state.user);
+  const { data: todos } = useGetTodosQuery(user?.id!, { skip: !user });
 
   const dispatch = useAppDispatch();
+  const [clearCompletedTodos] = useClearCompletedTodosMutation();
 
   const activeTodos = useMemo(
-    () => todos.filter((todo) => todo.completed === false).length,
+    () =>
+      todos ? todos.filter((todo) => todo.completed === false).length : [],
     [todos]
   );
 
   function handleClearCompleted() {
-    const todosToDelete = todos.filter((todo) => todo.completed === true);
-    dispatch(clearCompletedTodosRequest(todosToDelete));
+    if (todos && user) {
+      const todosToDelete = todos.filter((todo) => todo.completed === true);
+      clearCompletedTodos({ todos: todosToDelete, userId: user.id });
+    }
   }
 
-  if (todos.length >= 1)
+  if (todos && todos.length >= 1)
     return (
       <Box
         sx={{

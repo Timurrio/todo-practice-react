@@ -2,34 +2,32 @@ import { useMemo, useState } from 'react';
 import { TextField, Box, InputAdornment } from '@mui/material';
 import ToggleAllButton from '../ToggleAllButton/ToggleAllButton';
 import getToggleAllTodos from '../../functions/getToggleAllTodos';
-import { useAppDispatch, type RootState } from '../../store';
+import { type RootState } from '../../store';
 import { useSelector } from 'react-redux';
-import { selectFilteredTodos } from '../../store/todoSlice/todoSelectors';
-import {
-  createTodoRequest,
-  toggleAllTodosRequest,
-  type TodoState,
-} from '../../store/todoSlice/todoSlice';
+
 import type { UserState } from '../../store/userSlice/userSlice';
+import { useFilteredTodos } from '../../hooks/useFilteredTodos';
+import {
+  useCreateTodoMutation,
+  useGetTodosQuery,
+} from '../../store/todoSlice/todoService';
+import { useToggleAllTodosMutation } from '../../store/todoSlice/todoService';
+import type { TodoState } from '../../store/todoSlice/todoSlice';
 
 const TodoForm: React.FC = () => {
-  const dispatch = useAppDispatch();
-  const { filter, items: todos } = useSelector<RootState, TodoState>(
-    (state) => state.todos
-  );
+  const { filter } = useSelector<RootState, TodoState>((state) => state.todos);
   const { user } = useSelector<RootState, UserState>((state) => state.user);
-  const filteredTodos = useSelector(selectFilteredTodos);
+  const { data: todos } = useGetTodosQuery(user?.id!, { skip: !user });
+
+  const [toggleAllTodos] = useToggleAllTodosMutation();
+  const [createTodo] = useCreateTodoMutation();
+  const { filteredTodos } = useFilteredTodos(user?.id);
   const [inputValue, setInputValue] = useState<string>('');
 
   const isChecked = useMemo(() => {
     switch (filter) {
       case 'all':
-        // if (todos.some((td) => td.completed === false)) {
-        //   return false;
-        // } else {
-        //   return true;
-        // }
-        return !todos.some((td) => td.completed === false);
+        return todos ? !todos.some((td) => td.completed === false) : false;
       case 'active':
         return false;
       case 'completed':
@@ -43,20 +41,20 @@ const TodoForm: React.FC = () => {
   );
 
   function handleToggleAll() {
-    const toggledTodos = getToggleAllTodos(todos, filter, filteredTodos);
-    dispatch(toggleAllTodosRequest(toggledTodos));
+    if (todos && user) {
+      const toggledTodos = getToggleAllTodos(todos, filter, filteredTodos);
+      toggleAllTodos({ todos: toggledTodos, userId: user.id });
+    }
   }
 
   function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (inputValue.trim() !== '' && user) {
-      dispatch(
-        createTodoRequest({
-          completed: false,
-          text: inputValue.trim(),
-          userId: user.id,
-        })
-      );
+      createTodo({
+        completed: false,
+        text: inputValue.trim(),
+        userId: user.id,
+      });
     }
     setInputValue('');
   }

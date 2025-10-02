@@ -5,25 +5,30 @@ import { useMemo, useState } from 'react';
 import { useAppDispatch, type RootState } from '../../store';
 import {
   clearError,
-  loginRequest,
-  registerRequest,
   setIsModalVisible,
   type UserState,
 } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
+import {
+  useLoginMutation,
+  useRegisterMutation,
+} from '../../store/userSlice/userApi';
 
 export const AuthModal: React.FC = () => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const dispatch = useAppDispatch();
-  const { error } = useSelector<RootState, UserState>((state) => state.user);
+  const [login] = useLoginMutation();
+  const [register] = useRegisterMutation();
+  const { isLoading, error } = useSelector<RootState, UserState>(
+    (state) => state.user
+  );
 
   const onSubmitFunction = useMemo(
     () =>
       authMode === 'login'
-        ? (val: { email: string; password: string }) =>
-            dispatch(loginRequest(val))
+        ? (val: { email: string; password: string }) => login(val)
         : (val: { email: string; password: string; name: string }) =>
-            dispatch(registerRequest(val)),
+            register(val),
     [authMode]
   );
 
@@ -63,7 +68,7 @@ export const AuthModal: React.FC = () => {
           {capitalize(authMode)}
         </Typography>
         <Typography component={'p'} color="error">
-          {error && error}
+          {error}
         </Typography>
         <AuthForm mode={authMode} onSubmit={onSubmitFunction} />
         <Button

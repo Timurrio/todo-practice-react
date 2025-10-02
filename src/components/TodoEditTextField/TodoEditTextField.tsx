@@ -1,8 +1,8 @@
 import { TextField } from '@mui/material';
 import type { Todo } from '../../types/todo';
 import { useState } from 'react';
-import { updateTodoRequest } from '../../store/todoSlice/todoSlice';
-import { useAppDispatch } from '../../store';
+
+import { useUpdateTodoMutation } from '../../store/todoSlice/todoService';
 
 interface TodoEditTextFieldProps {
   todo: Todo;
@@ -14,19 +14,18 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
   setIsInEditMode,
 }) => {
   const [inputValue, setInputValue] = useState<string>(todo.text);
-  const dispatch = useAppDispatch();
+  const [updateTodo] = useUpdateTodoMutation();
 
   function handleChangeText(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === 'Enter') {
       if (inputValue.trim() !== '') {
-        dispatch(
-          updateTodoRequest({
-            id: todo.id,
-            text: inputValue.trim(),
-            completed: todo.completed,
-            userId: todo.userId,
-          })
-        );
+        updateTodo({
+          id: todo.id,
+          text: inputValue.trim(),
+          completed: todo.completed,
+          userId: todo.userId,
+        });
+        setIsInEditMode(false);
       }
     } else if (e.key === 'Escape') {
       setIsInEditMode(false);
