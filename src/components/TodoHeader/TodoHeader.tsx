@@ -1,5 +1,6 @@
 import { Box } from '@mui/material';
 import { styled } from '@mui/system';
+import React from 'react';
 
 const MainHeader = styled('h1')({
   color: '#b83f45',
@@ -22,4 +23,4 @@ const TodoHeader: React.FC = () => {
   );
 };
 
-export default TodoHeader;
+export default React.memo(TodoHeader);

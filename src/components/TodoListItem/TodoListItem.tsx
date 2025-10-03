@@ -12,6 +12,7 @@ import {
 import type { UserState } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../../store';
+import React from 'react';
 
 interface TodoListItemProps {
   todo: Todo;
@@ -118,4 +119,4 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
   );
 };
 
-export default TodoListItem;
+export default React.memo(TodoListItem);

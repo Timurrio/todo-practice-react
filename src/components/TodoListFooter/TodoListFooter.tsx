@@ -9,6 +9,7 @@ import {
   useGetTodosQuery,
 } from '../../store/todoSlice/todoService';
 import type { UserState } from '../../store/userSlice/userSlice';
+import React from 'react';
 
 const TodoListFooter: React.FC = () => {
   const { filter } = useSelector<RootState, TodoState>((state) => state.todos);
@@ -100,4 +101,4 @@ const TodoListFooter: React.FC = () => {
     );
 };
 
-export default TodoListFooter;
+export default React.memo(TodoListFooter);
