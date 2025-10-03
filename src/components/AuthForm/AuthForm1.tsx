@@ -1,8 +1,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { TextField, Button, Box } from '@mui/material';
-import { z } from 'zod';
-import { toFormikValidationSchema } from 'zod-formik-adapter';
+import * as Yup from 'yup';
 import type { AuthMode } from '../../types/AuthMode';
 
 interface AuthFormProps {
@@ -26,25 +25,24 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
       ? { email: '', password: '' }
       : { name: '', email: '', password: '', confirmPassword: '' };
 
-  const loginSchema = z.object({
-    email: z.string().min(1, 'Email is required').email('Invalid email format'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
+  const validationSchema = Yup.object().shape({
+    ...(mode === 'register' && {
+      name: Yup.string()
+        .required('Name is required')
+        .min(3, 'Name must be at least 3 characters'),
+    }),
+    email: Yup.string()
+      .required('Email is required')
+      .email('Invalid email format'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters'),
+    ...(mode === 'register' && {
+      confirmPassword: Yup.string()
+        .required('Please confirm your password')
+        .oneOf([Yup.ref('password')], 'Passwords do not match'),
+    }),
   });
-
-  const registerSchema = loginSchema
-    .extend({
-      name: z.string().min(3, 'Name must be at least 3 characters'),
-      confirmPassword: z.string().min(1, 'Please confirm your password'),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-      path: ['confirmPassword'],
-      message: 'Passwords do not match',
-    });
-
-  const validationSchema =
-    mode === 'login'
-      ? toFormikValidationSchema(loginSchema)
-      : toFormikValidationSchema(registerSchema);
 
   return (
     <Box sx={{ width: '100%' }}>
