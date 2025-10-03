@@ -75,6 +75,7 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
               <CheckCircleOutlineIcon sx={{ fontSize: 28, color: 'green' }} />
             }
             disableRipple
+            name="todoItem-toggleCompleted"
           />
 
           <Typography

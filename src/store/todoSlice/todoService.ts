@@ -2,6 +2,8 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Todo } from '../../types/todo';
 import type { RootState } from '..';
+import getToggleAllTodos from '../../functions/getToggleAllTodos';
+import filterTodos from '../../functions/filterTodos';
 
 export const todoApi = createApi({
   reducerPath: 'todoApi',
@@ -129,13 +131,20 @@ export const todoApi = createApi({
           method: 'PUT',
           body: { todos },
         }),
-        async onQueryStarted({ userId, todos }, { dispatch, queryFulfilled }) {
+        async onQueryStarted(
+          { userId, todos },
+          { dispatch, queryFulfilled, getState }
+        ) {
+          const state = getState() as RootState;
+          const filter = state.todos.filter;
+
           const patchResult = dispatch(
             todoApi.util.updateQueryData('getTodos', userId, (draft) => {
-              todos.forEach((changed) => {
-                const idx = draft.findIndex((t) => t.id === changed.id);
-                if (idx !== -1) draft[idx].completed = !draft[idx].completed;
-              });
+              return getToggleAllTodos(
+                draft,
+                filter,
+                filterTodos(draft, filter)
+              );
             })
           );
           try {
