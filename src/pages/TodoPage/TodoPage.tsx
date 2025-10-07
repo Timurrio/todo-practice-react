@@ -4,10 +4,7 @@ import { useAppDispatch } from '../../store';
 import { useEffect } from 'react';
 import { Box, CircularProgress } from '@mui/material';
 import { AuthModal } from '../../components/AuthModal/AuthModal';
-import {
-  setIsModalVisible,
-  type UserState,
-} from '../../store/userSlice/userSlice';
+import { setIsModalVisible } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
 import UserMenu from '../../components/UserMenu/UserMenu';

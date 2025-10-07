@@ -16,7 +16,7 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
   const [inputValue, setInputValue] = useState<string>(todo.text);
   const [updateTodo] = useUpdateTodoMutation();
 
-  function handleChangeText(e: React.KeyboardEvent<HTMLInputElement>) {
+  const handleChangeText = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (inputValue.trim() !== '') {
         updateTodo({
@@ -30,19 +30,19 @@ const TodoEditTextField: React.FC<TodoEditTextFieldProps> = ({
     } else if (e.key === 'Escape') {
       setIsInEditMode(false);
     }
-  }
+  };
 
-  function handleInputBlur() {
+  const handleInputBlur = () => {
     setIsInEditMode(false);
     setInputValue(todo.text);
-  }
+  };
 
   return (
     <TextField
       value={inputValue}
       onChange={(e) => setInputValue(e.target.value)}
       onBlur={handleInputBlur}
-      onKeyDown={(e) => handleChangeText(e)}
+      onKeyDown={handleChangeText}
       size="small"
       autoFocus
       variant="standard"

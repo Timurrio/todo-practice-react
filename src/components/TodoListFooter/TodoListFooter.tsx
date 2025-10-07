@@ -26,12 +26,12 @@ const TodoListFooter: React.FC = () => {
     [todos]
   );
 
-  function handleClearCompleted() {
+  const handleClearCompleted = () => {
     if (todos && user) {
       const todosToDelete = todos.filter((todo) => todo.completed === true);
       clearCompletedTodos({ todos: todosToDelete, userId: user.id });
     }
-  }
+  };
 
   if (todos && todos.length >= 1)
     return (

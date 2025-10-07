@@ -25,18 +25,18 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
   const [deleteTodo] = useDeleteTodoMutation();
   const [updateTodo] = useUpdateTodoMutation();
 
-  function handleDelete() {
+  const handleDelete = () => {
     user && deleteTodo({ id: todo.id, userId: user.id });
-  }
+  };
 
-  function handleToggle() {
+  const handleToggle = () => {
     updateTodo({
       id: todo.id,
       text: todo.text,
       completed: !todo.completed,
       userId: todo.userId,
     });
-  }
+  };
 
   return (
     <ListItem

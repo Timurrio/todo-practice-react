@@ -40,14 +40,14 @@ const TodoForm: React.FC = () => {
     [filteredTodos]
   );
 
-  function handleToggleAll() {
+  const handleToggleAll = () => {
     if (todos && user) {
       const toggledTodos = getToggleAllTodos(todos, filter, filteredTodos);
       toggleAllTodos({ todos: toggledTodos, userId: user.id });
     }
-  }
+  };
 
-  function handleFormSubmit(e: React.FormEvent) {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (inputValue.trim() !== '' && user) {
       createTodo({
@@ -57,7 +57,7 @@ const TodoForm: React.FC = () => {
       });
     }
     setInputValue('');
-  }
+  };
 
   return (
     <Box
