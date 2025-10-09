@@ -1,25 +1,26 @@
 import { Box, Button, capitalize, Typography } from '@mui/material';
-import AuthForm from '../AuthForm/AuthForm';
 import type { AuthMode } from '../../types/AuthMode';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useAppDispatch, type RootState } from '../../store';
-import {
-  clearError,
-  setIsModalVisible,
-  type UserState,
-} from '../../store/userSlice/userSlice';
+import { clearError, type UserState } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import {
   useLoginMutation,
   useRegisterMutation,
 } from '../../store/userSlice/userApi';
+import { useNavigate } from 'react-router-dom';
+import AuthForm from '../AuthForm/AuthForm';
 
-export const AuthModal: React.FC = () => {
-  const [authMode, setAuthMode] = useState<AuthMode>('login');
+interface AuthModalProps {
+  authMode: AuthMode;
+}
+
+export const AuthModal: React.FC<AuthModalProps> = ({ authMode }) => {
   const dispatch = useAppDispatch();
-  const [login] = useLoginMutation();
-  const [register] = useRegisterMutation();
-  const { isLoading, error } = useSelector<RootState, UserState>(
+  const [login, { isSuccess: loginSuccess }] = useLoginMutation();
+  const [register, { isSuccess: registerSuccess }] = useRegisterMutation();
+  const navigate = useNavigate();
+  const { isLoading, error, token } = useSelector<RootState, UserState>(
     (state) => state.user
   );
 
@@ -31,6 +32,16 @@ export const AuthModal: React.FC = () => {
             register(val),
     [authMode]
   );
+
+  useEffect(() => {
+    if (loginSuccess || registerSuccess || token) {
+      navigate('/todos');
+    }
+  }, [loginSuccess, registerSuccess, token, navigate]);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   return (
     <Box
@@ -44,10 +55,6 @@ export const AuthModal: React.FC = () => {
         bgcolor: 'rgba(0,0,0,0.5)',
         zIndex: '999',
       }}
-      onClick={(e) => {
-        e.preventDefault();
-        dispatch(setIsModalVisible(false));
-      }}
     >
       <Box
         sx={{
@@ -59,7 +66,6 @@ export const AuthModal: React.FC = () => {
           minWidth: '300px',
           width: '35vw',
         }}
-        onClick={(e) => e.stopPropagation()}
       >
         <Typography
           sx={{ marginBottom: '30px', fontSize: '40px', fontWeight: 'bold' }}
@@ -76,9 +82,7 @@ export const AuthModal: React.FC = () => {
           sx={{ marginTop: '25px' }}
           onClick={() => {
             dispatch(clearError());
-            setAuthMode((prev) => {
-              return prev === 'login' ? 'register' : 'login';
-            });
+            navigate(authMode === 'login' ? '/register' : '/login');
           }}
         >
           {authMode === 'login'

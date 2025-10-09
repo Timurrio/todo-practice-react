@@ -1,10 +1,6 @@
 import { useSelector } from 'react-redux';
 import { useAppDispatch, type RootState } from '../../store';
-import {
-  logout,
-  setIsModalVisible,
-  type UserState,
-} from '../../store/userSlice/userSlice';
+import { logout, type UserState } from '../../store/userSlice/userSlice';
 import { Box, Button, Typography } from '@mui/material';
 
 const UserMenu: React.FC = () => {
@@ -25,11 +21,7 @@ const UserMenu: React.FC = () => {
       }}
     >
       {!user || loading ? (
-        <Button
-          variant="outlined"
-          sx={{ margin: '0 auto auto' }}
-          onClick={() => dispatch(setIsModalVisible(true))}
-        >
+        <Button variant="outlined" sx={{ margin: '0 auto auto' }}>
           Login
         </Button>
       ) : (

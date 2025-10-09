@@ -6,7 +6,7 @@ export interface UserState {
   user: UserWithoutPassword | null;
   token: string | null;
   error: string | null;
-  isModalVisible: boolean;
+  // isModalVisible: boolean;
   isLoading: boolean;
 }
 
@@ -14,8 +14,8 @@ const initialState: UserState = {
   user: null,
   token: null,
   error: null,
-  isModalVisible: false,
-  isLoading: false,
+  // isModalVisible: false,
+  isLoading: true,
 };
 
 const userSlice = createSlice({
@@ -28,9 +28,9 @@ const userSlice = createSlice({
       state.error = null;
       localStorage.removeItem('token');
     },
-    setIsModalVisible: (state, action: PayloadAction<boolean>) => {
-      state.isModalVisible = action.payload;
-    },
+    // setIsModalVisible: (state, action: PayloadAction<boolean>) => {
+    //   state.isModalVisible = action.payload;
+    // },
     clearError: (state) => {
       state.error = null;
     },
@@ -98,5 +98,5 @@ const userSlice = createSlice({
   },
 });
 
-export const { logout, setIsModalVisible, clearError } = userSlice.actions;
+export const { logout, clearError } = userSlice.actions;
 export default userSlice.reducer;

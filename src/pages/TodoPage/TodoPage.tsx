@@ -1,27 +1,21 @@
 import TodoHeader from '../../components/TodoHeader/TodoHeader';
 import TodoMain from '../../components/TodoMain/TodoMain';
-import { useAppDispatch } from '../../store';
 import { useEffect } from 'react';
 import { Box, CircularProgress } from '@mui/material';
-import { AuthModal } from '../../components/AuthModal/AuthModal';
-import { setIsModalVisible } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import { type RootState } from '../../store';
 import UserMenu from '../../components/UserMenu/UserMenu';
+import { useNavigate } from 'react-router-dom';
 
 const TodoPage: React.FC = () => {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const { isModalVisible, user, isLoading } = useSelector(
-    (state: RootState) => state.user
-  );
+  const { user, isLoading } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     if (!isLoading) {
-      if (user) {
-        dispatch(setIsModalVisible(false));
-      } else {
-        dispatch(setIsModalVisible(true));
+      if (!user) {
+        navigate('/');
       }
     }
   }, [user]);
@@ -36,7 +30,6 @@ const TodoPage: React.FC = () => {
         alignItems: 'center',
       }}
     >
-      {!isLoading && isModalVisible && <AuthModal />}
       <TodoHeader />
       <UserMenu />
       {isLoading || !user ? (

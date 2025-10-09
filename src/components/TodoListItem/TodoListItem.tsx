@@ -19,7 +19,7 @@ interface TodoListItemProps {
 }
 
 const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
-  const [isEditMode, setisEditMode] = useState<boolean>(false);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const { user } = useSelector<RootState, UserState>((state) => state.user);
 
   const [deleteTodo] = useDeleteTodoMutation();
@@ -58,10 +58,10 @@ const TodoListItem: React.FC<TodoListItemProps> = ({ todo }) => {
           opacity: 1,
         },
       }}
-      onDoubleClick={() => setisEditMode(true)}
+      onDoubleClick={() => setIsEditMode(true)}
     >
       {isEditMode ? (
-        <TodoEditTextField setIsInEditMode={setisEditMode} todo={todo} />
+        <TodoEditTextField setIsInEditMode={setIsEditMode} todo={todo} />
       ) : (
         <>
           <Checkbox
