@@ -61,14 +61,15 @@ const userSlice = createSlice({
           state.error = null;
         }
       )
-      .addMatcher(
-        (action) =>
-          action.type.endsWith('/rejected') &&
-          action.type.startsWith('userApi/'),
-        (state, action) => {
-          state.error = action.error?.message ?? 'Unexpected error';
-        }
-      )
+      // .addMatcher(
+      //   (action) =>
+      //     action.type.endsWith('/rejected') &&
+      //     action.type.startsWith('userApi/'),
+      //   (state, action) => {
+      //     console.log(action);
+      //     state.error = action.payload?.data?.message ?? 'Unexpected error';
+      //   }
+      // )
 
       .addMatcher(
         (action) =>
@@ -91,7 +92,9 @@ const userSlice = createSlice({
           action.type.startsWith('userApi/') &&
           action.type.endsWith('/rejected'),
         (state, action) => {
-          state.error = action.error?.message ?? 'Unexpected error';
+          if (action.payload?.data?.message.trim() !== 'Not authorized') {
+            state.error = action.payload?.data?.message ?? 'Unexpected error';
+          }
           state.isLoading = false;
         }
       );

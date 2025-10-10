@@ -18,7 +18,7 @@ const TodoPage: React.FC = () => {
         navigate('/');
       }
     }
-  }, [user]);
+  }, [user, isLoading]);
 
   return (
     <Box

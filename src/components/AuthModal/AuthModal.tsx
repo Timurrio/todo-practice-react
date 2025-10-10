@@ -24,6 +24,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ authMode }) => {
     (state) => state.user
   );
 
+  useEffect(() => {
+    dispatch(clearError());
+  }, []);
+
   const onSubmitFunction = useMemo(
     () =>
       authMode === 'login'

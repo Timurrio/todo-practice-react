@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, InputAdornment } from '@mui/material';
 import { z } from 'zod';
 import { toFormikValidationSchema } from 'zod-formik-adapter';
 import type { AuthMode } from '../../types/AuthMode';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 
 interface AuthFormProps {
   mode: AuthMode;
@@ -25,6 +26,10 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
     mode === 'login'
       ? { email: '', password: '' }
       : { name: '', email: '', password: '', confirmPassword: '' };
+
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
 
   const loginSchema = z.object({
     email: z.string().min(1, 'Email is required').email('Invalid email format'),
@@ -52,7 +57,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values) => onSubmit(values)}
-        enableReinitialize
+        // enableReinitialize
       >
         {({ errors, touched, isValid, dirty }) => (
           <Form>
@@ -85,10 +90,25 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
                 name="password"
                 as={TextField}
                 label="Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 fullWidth
                 error={touched.password && Boolean(errors.password)}
                 helperText={<ErrorMessage name="password" />}
+                slotProps={{
+                  input: {
+                    endAdornment: (
+                      <InputAdornment position="end" sx={{ cursor: 'pointer' }}>
+                        {showPassword ? (
+                          <VisibilityOff
+                            onClick={() => setShowPassword(false)}
+                          />
+                        ) : (
+                          <Visibility onClick={() => setShowPassword(true)} />
+                        )}
+                      </InputAdornment>
+                    ),
+                  },
+                }}
               />
             </Box>
 
@@ -98,11 +118,31 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode, onSubmit }) => {
                   name="confirmPassword"
                   as={TextField}
                   label="Confirm Password"
-                  type="password"
+                  type={showConfirmPassword ? 'text' : 'password'}
                   fullWidth
                   error={
                     touched.confirmPassword && Boolean(errors.confirmPassword)
                   }
+                  slotProps={{
+                    input: {
+                      endAdornment: (
+                        <InputAdornment
+                          position="end"
+                          sx={{ cursor: 'pointer' }}
+                        >
+                          {showConfirmPassword ? (
+                            <VisibilityOff
+                              onClick={() => setShowConfirmPassword(false)}
+                            />
+                          ) : (
+                            <Visibility
+                              onClick={() => setShowConfirmPassword(true)}
+                            />
+                          )}
+                        </InputAdornment>
+                      ),
+                    },
+                  }}
                   helperText={<ErrorMessage name="confirmPassword" />}
                 />
               </Box>
