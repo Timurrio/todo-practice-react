@@ -1,6 +1,7 @@
 import ErrorPage from '../pages/ErrorPage/ErrorPage';
 import LoginPage from '../pages/LoginPage/LoginPage';
 import RegisterPage from '../pages/RegisterPage/RegisterPage';
+import TablePage from '../pages/TablePage/TablePage';
 import TodoPage from '../pages/TodoPage/TodoPage';
 
 enum routeNames {
@@ -9,6 +10,7 @@ enum routeNames {
   DEFAULT = '/',
   LOGIN = '/login',
   REGISTER = '/register',
+  TABLE = '/table',
 }
 
 export interface RouteInfo {
@@ -33,6 +35,10 @@ export const routes: RouteInfo[] = [
   {
     path: routeNames.LOGIN,
     element: <LoginPage />,
+  },
+  {
+    path: routeNames.TABLE,
+    element: <TablePage />,
   },
 
   {
