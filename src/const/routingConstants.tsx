@@ -10,7 +10,7 @@ enum routeNames {
   DEFAULT = '/',
   LOGIN = '/login',
   REGISTER = '/register',
-  TABLE = '/table',
+  TABLE = '/table/:country/:year',
 }
 
 export interface RouteInfo {
