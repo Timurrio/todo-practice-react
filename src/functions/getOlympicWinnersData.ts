@@ -1,4 +1,5 @@
 import olympicWinnersSchema from '../zodSchema/olympicWinnersSchema';
+import { parse } from 'date-fns';
 
 export default async function getOlympicWinnersData() {
   const response = await fetch(
@@ -13,5 +14,10 @@ export default async function getOlympicWinnersData() {
 
   const parsedData = olympicWinnersSchema.parse(data);
 
-  return parsedData;
+  const formattedData = parsedData.map((item) => ({
+    ...item,
+    date: item.date ? parse(item.date, 'dd/MM/yyyy', new Date()) : null,
+  }));
+
+  return formattedData;
 }
