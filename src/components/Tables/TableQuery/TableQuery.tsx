@@ -2,10 +2,14 @@ import { useQuery } from '@tanstack/react-query';
 import getOlympicWinnersData from '../../../functions/getOlympicWinnersData';
 import { AgGridReact } from 'ag-grid-react';
 import type IOlympicData from '../../../types/IOlympicData';
-import { useState } from 'react';
-import type { ColDef, GridApi } from 'ag-grid-enterprise';
+import { useRef, useState } from 'react';
+import type { ColDef } from 'ag-grid-enterprise';
 import { type GridReadyEvent } from 'ag-grid-community';
 import { Box, Button, Skeleton } from '@mui/material';
+
+const handleOnGridReady = (params: GridReadyEvent) => {
+  params.api.sizeColumnsToFit();
+};
 
 const TableQuery = () => {
   const {
@@ -33,20 +37,24 @@ const TableQuery = () => {
     },
   ]);
 
-  const [gridApi, setGridApi] = useState<GridApi | null>(null);
+  const gridRef = useRef<AgGridReact<IOlympicData>>(null);
 
   const handleDeleteSelected = () => {
+    const gridApi = gridRef.current?.api;
     if (!gridApi) return;
     const selectedRows = gridApi.getSelectedRows();
     gridApi.applyTransaction({ remove: selectedRows });
   };
 
   const handleAddTotal = () => {
+    const gridApi = gridRef.current?.api;
     if (!gridApi) return;
     const selectedRows = gridApi.getSelectedRows();
 
+    const TOTAL_INCREMENT = 10;
+
     selectedRows.forEach((row) => {
-      row.total = (row.total || 0) + 10;
+      row.total = (row.total || 0) + TOTAL_INCREMENT;
     });
 
     gridApi.applyTransaction({ update: selectedRows });
@@ -78,17 +86,15 @@ const TableQuery = () => {
           Delete Selected
         </Button>
         <Button variant="contained" color="primary" onClick={handleAddTotal}>
-          Total + 10
+          Increment Total
         </Button>
       </Box>
 
       <AgGridReact<IOlympicData>
+        ref={gridRef}
         rowData={rowData}
         columnDefs={colDefs}
-        onGridReady={(params: GridReadyEvent) => {
-          setGridApi(params.api);
-          params.api.sizeColumnsToFit();
-        }}
+        onGridReady={(params: GridReadyEvent) => handleOnGridReady(params)}
         gridOptions={{
           rowSelection: {
             mode: 'multiRow',
