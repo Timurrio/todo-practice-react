@@ -3,6 +3,7 @@ import { TableTest } from '../../components/Tables/TableTest/TableTest';
 import { TableExpand } from '../../components/Tables/TableExpand/TableExpand';
 import AutoExpandTable from '../../components/Tables/AutoExpandTable/AutoExpandTable';
 import TableQuery from '../../components/Tables/TableQuery/TableQuery';
+import ServerSideTable from '../../components/Tables/ServerSideTable/ServerSideTable';
 
 const TablePage = () => {
   return (
@@ -26,7 +27,8 @@ const TablePage = () => {
         {/* <TableTest /> */}
         {/* <TableExpand /> */}
         {/* <AutoExpandTable /> */}
-        <TableQuery />
+        {/* <TableQuery /> */}
+        <ServerSideTable />
       </Box>
     </Box>
   );
