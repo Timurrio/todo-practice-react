@@ -5,6 +5,7 @@ import { useAppDispatch, type RootState } from '../../store';
 import { clearError, type UserState } from '../../store/userSlice/userSlice';
 import { useSelector } from 'react-redux';
 import {
+  useCheckQuery,
   useLoginMutation,
   useRegisterMutation,
 } from '../../store/userSlice/userApi';
@@ -19,8 +20,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ authMode }) => {
   const dispatch = useAppDispatch();
   const [login, { isSuccess: loginSuccess }] = useLoginMutation();
   const [register, { isSuccess: registerSuccess }] = useRegisterMutation();
+  const { data: userData } = useCheckQuery();
+
   const navigate = useNavigate();
-  const { isLoading, error, token } = useSelector<RootState, UserState>(
+  const { isLoading, error } = useSelector<RootState, UserState>(
     (state) => state.user
   );
 
@@ -38,10 +41,10 @@ export const AuthModal: React.FC<AuthModalProps> = ({ authMode }) => {
   );
 
   useEffect(() => {
-    if (loginSuccess || registerSuccess || token) {
+    if (loginSuccess || registerSuccess || userData?.user) {
       navigate('/todos');
     }
-  }, [loginSuccess, registerSuccess, token, navigate]);
+  }, [loginSuccess, registerSuccess, navigate, userData]);
 
   if (isLoading) {
     return <></>;

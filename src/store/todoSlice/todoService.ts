@@ -4,17 +4,19 @@ import type { Todo } from '../../types/todo';
 import type { RootState } from '..';
 import getToggleAllTodos from '../../functions/getToggleAllTodos';
 import filterTodos from '../../functions/filterTodos';
+import { baseQueryWithReauth } from './baseQueryWithReauth';
 
 export const todoApi = createApi({
   reducerPath: 'todoApi',
-  baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_URL,
-    prepareHeaders: (headers, { getState }) => {
-      const token = (getState() as RootState).user.token;
-      if (token) headers.set('authorization', `Bearer ${token}`);
-      return headers;
-    },
-  }),
+  baseQuery: baseQueryWithReauth,
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl: import.meta.env.VITE_API_URL,
+  //   prepareHeaders: (headers, { getState }) => {
+  //     const token = (getState() as RootState).user.accessToken;
+  //     if (token) headers.set('authorization', `Bearer ${token}`);
+  //     return headers;
+  //   },
+  // }),
   tagTypes: ['Todo'],
 
   endpoints: (builder) => ({

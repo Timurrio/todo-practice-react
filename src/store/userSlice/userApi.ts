@@ -4,7 +4,8 @@ import { jwtDecode } from 'jwt-decode';
 import { todoApi } from '../todoSlice/todoService';
 
 interface AuthResponse {
-  token: string;
+  accessToken: string;
+  refreshToken?: string;
 }
 
 interface DecodedToken {
@@ -15,7 +16,11 @@ interface DecodedToken {
   iat: number;
 }
 
-function decodeToken(token: string): UserWithoutPassword {
+function decodeToken(token?: string): UserWithoutPassword {
+  if (!token || typeof token !== 'string') {
+    throw new Error('Invalid token');
+  }
+
   const decoded: DecodedToken = jwtDecode(token);
   return {
     id: decoded.id,
@@ -26,64 +31,108 @@ function decodeToken(token: string): UserWithoutPassword {
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:5000/api/' }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: 'http://localhost:5000/api/',
+  }),
   tagTypes: ['Auth'],
   endpoints: (builder) => ({
     register: builder.mutation<
-      { user: UserWithoutPassword; token: string },
+      { user: UserWithoutPassword; accessToken: string; refreshToken?: string },
       { email: string; password: string; name: string }
     >({
-      query: (registerData) => ({
+      query: (body) => ({
         url: '/user/registration',
         method: 'POST',
-        body: registerData,
+        body,
       }),
       transformResponse: (response: AuthResponse) => {
-        localStorage.setItem('token', response.token);
-        return { user: decodeToken(response.token), token: response.token };
+        const user = decodeToken(response.accessToken);
+        localStorage.setItem('accessToken', response.accessToken);
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+        }
+        return {
+          user,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        };
       },
     }),
 
     login: builder.mutation<
-      { user: UserWithoutPassword; token: string },
+      { user: UserWithoutPassword; accessToken: string; refreshToken?: string },
       { email: string; password: string }
     >({
-      query: (loginData) => ({
+      query: (body) => ({
         url: '/user/login',
         method: 'POST',
-        body: loginData,
+        body,
       }),
       transformResponse: (response: AuthResponse) => {
-        localStorage.setItem('token', response.token);
-        return { user: decodeToken(response.token), token: response.token };
+        const user = decodeToken(response.accessToken);
+        localStorage.setItem('accessToken', response.accessToken);
+        if (response.refreshToken) {
+          localStorage.setItem('refreshToken', response.refreshToken);
+        }
+        return {
+          user,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
+        };
+      },
+    }),
+
+    refresh: builder.mutation<{ accessToken: string }, void>({
+      query: () => ({
+        url: '/user/refresh',
+        method: 'POST',
+        body: { refreshToken: localStorage.getItem('refreshToken') },
+      }),
+      transformResponse: (response: AuthResponse) => {
+        localStorage.setItem('accessToken', response.accessToken);
+        return { accessToken: response.accessToken };
       },
     }),
 
     check: builder.query<
-      { user: UserWithoutPassword | null; token: string | null },
+      { user: UserWithoutPassword | null; accessToken: string | null },
       void
     >({
-      query: () => ({
-        url: '/user/auth',
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token') ?? ' '}`,
-        },
-      }),
+      query: () => {
+        const token = localStorage.getItem('accessToken');
+        if (!token) {
+          throw new Error('No access token');
+        }
+        return {
+          url: '/user/auth',
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
       transformResponse: (response: AuthResponse) => {
-        localStorage.setItem('token', response.token);
-        return { user: decodeToken(response.token), token: response.token };
+        if (!response.accessToken) {
+          throw new Error('No access token in response');
+        }
+        const user = decodeToken(response.accessToken);
+        console.log(user);
+        console.log(response.accessToken);
+        localStorage.setItem('accessToken', response.accessToken);
+        return { user, accessToken: response.accessToken };
       },
       transformErrorResponse: (error) => {
-        localStorage.removeItem('token');
-        return error;
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
+        return { user: null, accessToken: null };
       },
       providesTags: ['Auth'],
     }),
 
     logout: builder.mutation<void, void>({
       queryFn: async (_arg, api) => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('refreshToken');
         api.dispatch(userApi.util.invalidateTags(['Auth']));
         api.dispatch(todoApi.util.invalidateTags(['Todo']));
         return { data: undefined };
@@ -92,4 +141,9 @@ export const userApi = createApi({
   }),
 });
 
-export const { useRegisterMutation, useLoginMutation, useCheckQuery } = userApi;
+export const {
+  useRegisterMutation,
+  useLoginMutation,
+  useRefreshMutation,
+  useCheckQuery,
+} = userApi;

@@ -4,33 +4,43 @@ import { userApi } from './userApi';
 
 export interface UserState {
   user: UserWithoutPassword | null;
-  token: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   error: string | null;
-  // isModalVisible: boolean;
   isLoading: boolean;
 }
 
 const initialState: UserState = {
   user: null,
-  token: null,
+  accessToken: localStorage.getItem('accessToken'),
+  refreshToken: localStorage.getItem('refreshToken'),
   error: null,
-  // isModalVisible: false,
-  isLoading: true,
+  isLoading: false,
 };
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    setTokens: (
+      state,
+      action: PayloadAction<{ accessToken: string; refreshToken: string }>
+    ) => {
+      state.accessToken = action.payload.accessToken;
+      state.refreshToken = action.payload.refreshToken;
+
+      localStorage.setItem('accessToken', action.payload.accessToken);
+      localStorage.setItem('refreshToken', action.payload.refreshToken);
+    },
+
     logout: (state) => {
       state.user = null;
-      state.token = null;
+      state.accessToken = null;
+      state.refreshToken = null;
       state.error = null;
-      localStorage.removeItem('token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     },
-    // setIsModalVisible: (state, action: PayloadAction<boolean>) => {
-    //   state.isModalVisible = action.payload;
-    // },
     clearError: (state) => {
       state.error = null;
     },
@@ -41,35 +51,45 @@ const userSlice = createSlice({
         userApi.endpoints.register.matchFulfilled,
         (state, { payload }) => {
           state.user = payload.user;
-          state.token = payload.token;
+          state.accessToken = payload.accessToken;
+          state.refreshToken = payload.refreshToken ?? null;
           state.error = null;
+
+          localStorage.setItem('accessToken', payload.accessToken);
+          if (payload.refreshToken) {
+            localStorage.setItem('refreshToken', payload.refreshToken);
+          }
         }
       )
       .addMatcher(
         userApi.endpoints.login.matchFulfilled,
         (state, { payload }) => {
           state.user = payload.user;
-          state.token = payload.token;
+          state.accessToken = payload.accessToken;
+          state.refreshToken = payload.refreshToken ?? null;
           state.error = null;
+
+          localStorage.setItem('accessToken', payload.accessToken);
+          if (payload.refreshToken) {
+            localStorage.setItem('refreshToken', payload.refreshToken);
+          }
+        }
+      )
+      .addMatcher(
+        userApi.endpoints.refresh.matchFulfilled,
+        (state, { payload }) => {
+          state.accessToken = payload.accessToken;
+          state.error = null;
+          localStorage.setItem('accessToken', payload.accessToken);
         }
       )
       .addMatcher(
         userApi.endpoints.check.matchFulfilled,
         (state, { payload }) => {
           state.user = payload.user;
-          state.token = payload.token;
           state.error = null;
         }
       )
-      // .addMatcher(
-      //   (action) =>
-      //     action.type.endsWith('/rejected') &&
-      //     action.type.startsWith('userApi/'),
-      //   (state, action) => {
-      //     console.log(action);
-      //     state.error = action.payload?.data?.message ?? 'Unexpected error';
-      //   }
-      // )
 
       .addMatcher(
         (action) =>
@@ -92,14 +112,23 @@ const userSlice = createSlice({
           action.type.startsWith('userApi/') &&
           action.type.endsWith('/rejected'),
         (state, action) => {
-          if (action.payload?.data?.message.trim() !== 'Not authorized') {
-            state.error = action.payload?.data?.message ?? 'Unexpected error';
+          const message = action.payload?.data?.message?.trim();
+
+          if (message === 'Not authorized' || message === 'Invalid token') {
+            state.user = null;
+            state.accessToken = null;
+            state.refreshToken = null;
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+          } else {
+            state.error = message || 'Unexpected error';
           }
+
           state.isLoading = false;
         }
       );
   },
 });
 
-export const { logout, clearError } = userSlice.actions;
+export const { logout, clearError, setTokens } = userSlice.actions;
 export default userSlice.reducer;
